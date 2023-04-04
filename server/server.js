@@ -1,0 +1,94 @@
+// DEPS
+
+require('dotenv').config();
+const { logger } = require('./logger');
+const express = require('express');
+const app = express();
+const cors = require('cors');
+const { Configuration, OpenAIApi } = require("openai");
+
+const port = 8000 || process.env.PORT;
+
+// CREDS - OPENAI
+
+const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY
+});
+const openai = new OpenAIApi(configuration);
+const MAX_TOKENS = 50;
+
+// CREDS - ELEVENLABS
+
+const voice_id = 'LckP2Hd96Vzr02lAF5IN'; // BIDEN
+const voiceUrl = `https://api.elevenlabs.io/v1/text-to-speech/${voice_id}`;
+const apiKey = process.env.ELEVEN_API_KEY;
+
+// MIDDLEWARE
+
+app.use(logger);
+app.use(cors());
+app.use(express.json());
+
+// SERVER ROUTES
+
+app.get('/', async (req, res) => {
+    res.status(200).send({ message: "Entering a URL into the browser sends a GET request to that URL." });  
+}); 
+
+app.post('/', async (req, res) => {    
+    const prompt = req.body.prompt;
+    console.clear();
+    console.log(prompt);
+
+    // CALL OPENAI
+
+    const gpt = await openai.createChatCompletion({
+    model: "gpt-3.5-turbo",
+    temperature: 0.5,
+    max_tokens: MAX_TOKENS,
+    messages: [{ "role": "user", "content": `Respond in less than ${MAX_TOKENS} tokens. ${prompt}` }],
+    });
+    const gptContent = gpt.data.choices[0].message.content;
+    console.log(gptContent);
+
+    // CALL ELEVENLABS
+
+    const response = await fetch(voiceUrl, 
+    {
+        method: 'POST',
+        headers: 
+        {
+            'accept': 'audio/mpeg',
+            'xi-api-key': apiKey,
+            'content-type': 'application/json'
+        },
+        body: JSON.stringify(
+        {
+            text: gptContent,
+            voice_settings: {
+                stability: 0,
+                similarity_boost: 0
+            }
+        })
+    });
+
+    // BUFFER RESPONSE AND SERVE CLIENT
+
+    if (response.ok) {
+        const blob = await response.blob();
+        console.log(blob);
+
+        res.type(blob.type);
+        blob.arrayBuffer()
+            .then((buf) => {
+            res.status(200).send(Buffer.from(buf));
+        })
+    }
+});
+
+// INIT
+
+app.listen(port, () => {
+    console.clear();
+    console.log(`Server running on port ${port}`);
+});
