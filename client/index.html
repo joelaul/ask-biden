@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+    
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ask Biden!</title>
-
     <link rel="icon" href="./assets/favicon.ico">
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./style.scss">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script defer type="module" src="./app.js"></script>
 </head>
+
 <body>
 
     <div class="fork-me">
@@ -31,18 +32,23 @@
         </div>
 
         <div class="middle-body-top">
-
             <img width="300" height="auto" src="./assets/biden.png">
-            <canvas class="waveform"></canvas>
-            
-            <div class="loader hide">
-                <p class="load-message"> Be patient. He's a little sleepy...</p>
-                <div class="loader-wheel">
-                </div>
-            </div>
 
-            <div class="listen hide">
-                <p class="listen-message"> Listening... </p>
+            <div class="peekaboo hide">
+
+                <canvas class="waveform ">
+                </canvas>
+                
+                <div class="loader ">
+                    <p class="load-message"> Be patient. He's a little sleepy...</p>
+                    <div class="loader-wheel">
+                    </div>
+                </div>
+
+                <div class="listen ">
+                    <p class="listen-message"> Listening... </p>
+                </div>
+
             </div>
 
             <form>

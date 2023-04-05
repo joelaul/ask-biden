@@ -1,18 +1,17 @@
 /* DEV:
-// FIGURE OUT GIT BULLSHIT
 // COLLAPSE CANVAS AREA WHEN NO CONTENT IS DISPLAYED
 // IMESSAGE LOG RIGHT SIDE
-// IMPROVE ANIMATIONS / SASS
-// BG PARTICLES OR FALLING STARS / TV STATIC
+// TV STATIC
+// BG PARTICLES, STARS, CONFETTI
 */
 
 /* PROD:
-// REMOVE FUNNY BUSINESS (USE A FORK FOR MEMES)
+// REMOVE FUNNY BUSINESS (HAVE A PERSONAL FORK)
 // PRETTIER
-// JEST UNIT TESTS, ADD ERROR HANDLING
+// JEST UNIT TESTING, ERROR HANDLING
 // DEPLOY TO GLITCH
 // README: DEPLOYMENT GUIDE FOR DEVS, ARCHITECTURE FLOWCHART
-// VIDEO DEMO, BLOG
+// VIDEO, BLOG
 // ELI5 TO RECRUITERS
 */
 
@@ -32,11 +31,12 @@
 // RESOURCE CONTROL: THROTTLING, CACHING, TOKEN LIMIT
 // LOGGING, MIDDLEWARE, MODULES
 // ENVIRONMENT VARIABLES, DIRECTORY STRUCTURE
-// BLOBS, BUFFERS, BIN ARRAYS, OBJECT URLS
+// BLOBS, OBJECT URLS, BUFFERS (BINARY)
 */
 
 // DOWN THE ROAD:
-// IS THERE A MORE EFFICIENT WAY OF POSITIONING ELEMENTS?
+// LESS HAPHAZARD ELEMENT POSITIONING?
+// TRY FIXED INSTEAD OF ABSOLUTE
 
 // DOM
 
@@ -50,7 +50,7 @@ const suggestions = document.querySelectorAll('.middle-body-bottom button');
 
 // STATE
 
-const clickedButtons = {};
+const usedPrompts = {};
 let audio, analyser, userStream, throttleTimer, formText;
 
 const canvas = document.querySelector(".waveform");
@@ -100,8 +100,8 @@ const handleAsk = async (prompt) => {
         }
 
         // check - has it been asked? (Y = memo, N = throttle/fetch)
-        if (clickedButtons[prompt]) {
-            audio.src = clickedButtons[prompt]
+        if (usedPrompts[prompt]) {
+            audio.src = usedPrompts[prompt]
             audio.play();
         } else {
             // throttle request for 7 seconds
@@ -136,7 +136,7 @@ const handleAsk = async (prompt) => {
                     canvas.classList.remove('hide');
 
                     audio.play();
-                    clickedButtons[prompt] = url;
+                    usedPrompts[prompt] = url;
                 }
             }
         }
