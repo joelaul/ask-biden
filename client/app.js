@@ -1,8 +1,13 @@
 /* DEV:
-// COLLAPSE CANVAS AREA WHEN NO CONTENT IS DISPLAYED
-// IMESSAGE LOG RIGHT SIDE
-// TV STATIC
-// BG PARTICLES, STARS, CONFETTI
+// IMESSAGE LOG RIGHT SIDE (COMPONENTS)
+// SEND REQUESTS WITH CONTEXT
+// STORE USER CONVERSATIONS IN DATABASE
+
+// MOVE THROTTLE TO BACKEND?
+
+// BG FALLING STARS/CONFETTI; JOE STATIC/SPIN
+// "DOUBLE IT AND GIVE IT TO THE NEXT PERSON"
+// REFACTOR - LESS GLOBAL STATE, MORE FUNCTIONS?
 */
 
 /* PROD:
@@ -14,18 +19,17 @@
 // VIDEO, BLOG
 // ELI5 TO RECRUITERS
 */
-
-/* TOOLS AND TECHNOLOGIES:
+/* TOOLS AND TECH:
 // WEB SPEECH
 // WEB AUDIO
 // CANVAS
 // OPENAI
 // ELEVENLABS
 // EXPRESS, DOTENV
+// SASS
 // PARCEL
 // TERMINAL
 */
-
 /* LESSONS LEARNED:
 // FORMS (BUTTONS ARE TYPE="SUBMIT" BY DEFAULT)
 // RESOURCE CONTROL: THROTTLING, CACHING, TOKEN LIMIT
@@ -33,10 +37,10 @@
 // ENVIRONMENT VARIABLES, DIRECTORY STRUCTURE
 // BLOBS, OBJECT URLS, BUFFERS (BINARY)
 */
-
-// DOWN THE ROAD:
+/* DOWN THE ROAD:
 // LESS HAPHAZARD ELEMENT POSITIONING?
 // TRY FIXED INSTEAD OF ABSOLUTE
+*/
 
 // DOM
 
@@ -46,16 +50,19 @@ const voice = document.querySelectorAll('form button')[0];
 const submit = document.querySelectorAll('form button')[1];
 const loader = document.querySelector('.loader');
 const listen = document.querySelector('.listen');
-const suggestions = document.querySelectorAll('.middle-body-bottom button');
+const suggestions = document.querySelectorAll('.suggestion-buttons button');
+const middleSlide = document.querySelector('.middle-slide');
+const peekaboo = document.querySelector('.peekaboo');
 
 // STATE
 
 const usedPrompts = {};
 let audio, analyser, userStream, throttleTimer, formText;
+let voiceAllowed = true;
 
 const canvas = document.querySelector(".waveform");
 const canvasCtx = canvas.getContext("2d");
-const HEIGHT = 70, WIDTH = 295;
+const HEIGHT = 66, WIDTH = 295;
 canvas.width = WIDTH, canvas.height = HEIGHT;
 canvasCtx.fillStyle = "rgb(255, 255, 255)";
 canvasCtx.strokeStyle = "rgb(0, 0, 0)";
@@ -66,43 +73,56 @@ const stt = new webkitSpeechRecognition;
 // FUNCTIONS
 
 const handleVoice = () => {
-    // display listening prompt
-    listen.classList.remove('hide');
-    canvas.classList.add('hide');
+    if (voiceAllowed) {
 
-    stt.addEventListener('speechend', stt.stop);
+        middleSlide.classList.add('slide-out');
+        setTimeout(() => {
+            listen.classList.remove('hide');
+        }, 100);
 
-    stt.addEventListener('result', (e) => {
-        let transcript = e.results[0][0].transcript;
-        textArea.value = transcript;
-        
-        // display loader
-        listen.classList.add('hide');
-        loader.classList.remove('hide');
+        stt.start();
 
-        handleAsk(transcript);
-    });
+        stt.addEventListener('speechend', stt.stop);
+        stt.addEventListener('result', (e) => {
+            let transcript = e.results[0][0].transcript;
+            textArea.value = transcript;
+            listen.classList.add('hide');
+            handleAsk(transcript);
+        });
+    }
 }
 
 const handleAsk = async (prompt) => {
     if (textArea.value.length > 0) {
 
+        middleSlide.classList.add('slide-out');
+        voiceAllowed = false;
+
         // check - has audio been initialized?
         if (audio) {
-        if (!audio.ended) audio.pause();
+            if (!audio.ended) audio.pause();
         } else {
-            audio = new Audio();
-            const audioCtx = new AudioContext();
-            const audioNode = audioCtx.createMediaElementSource(audio);
-            analyser = new AnalyserNode(audioCtx);
-            audioNode.connect(analyser);
-            analyser.connect(audioCtx.destination);
+            (initAudio = () => {
+                audio = new Audio();
+                audio.addEventListener('ended', () => {
+                    middleSlide.classList.remove('slide-out');
+                    canvas.classList.add('hide');
+                    voiceAllowed = true;
+                });
+
+                const audioCtx = new AudioContext();
+                const audioNode = audioCtx.createMediaElementSource(audio);
+                analyser = new AnalyserNode(audioCtx);
+                analyser.fftSize = 2048;
+
+                audioNode.connect(analyser);
+                analyser.connect(audioCtx.destination);
+            })();
         }
 
         // check - has it been asked? (Y = memo, N = throttle/fetch)
         if (usedPrompts[prompt]) {
             audio.src = usedPrompts[prompt]
-            audio.play();
         } else {
             // throttle request for 7 seconds
             if (throttleTimer) {
@@ -131,20 +151,17 @@ const handleAsk = async (prompt) => {
                     const url = URL.createObjectURL(blob);
                     audio.src = url;
                     
-                    // display canvas
                     loader.classList.add('hide');
-                    canvas.classList.remove('hide');
-
-                    audio.play();
                     usedPrompts[prompt] = url;
                 }
             }
         }
 
-        // # samples in each snapshot (46 ms @ 44.1)
-        analyser.fftSize = 2048;
-
+        setTimeout(() => {
+            canvas.classList.remove('hide')
+        }, 100);
         const dataArray = new Uint8Array(analyser.fftSize); 
+        audio.play();
 
         // draw visualization to canvas (60 snapshots per second)
         const draw = () => {
@@ -180,13 +197,6 @@ const handleAsk = async (prompt) => {
 
 const init = () => {
     
-    (initCanvas = () => {
-        canvasCtx.beginPath();
-        canvasCtx.moveTo(0, HEIGHT / 2);
-        canvasCtx.lineTo(WIDTH, HEIGHT / 2);
-        canvasCtx.stroke();
-    })();
-
     for (let suggestion of suggestions) {
         suggestion.addEventListener('click', () => {
             textArea.value = suggestion.innerText;
@@ -201,7 +211,6 @@ const init = () => {
 
     voice.addEventListener('click', (e) => {
         e.preventDefault();
-        stt.start();
         handleVoice();
     });
 
