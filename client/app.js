@@ -1,13 +1,12 @@
 /* DEV:
-// IMESSAGE LOG RIGHT SIDE (COMPONENTS)
+// IMESSAGE LOG ON RIGHT (TRANS FADE)
+// MAKE SUGGESTION WHEEL, ADD SUGGESTIONS (TRANS FADE)
 // SEND REQUESTS WITH CONTEXT
-// STORE USER CONVERSATIONS IN DATABASE
 
 // MOVE THROTTLE TO BACKEND?
-
 // BG FALLING STARS/CONFETTI; JOE STATIC/SPIN
 // "DOUBLE IT AND GIVE IT TO THE NEXT PERSON"
-// REFACTOR - LESS GLOBAL STATE, MORE FUNCTIONS?
+// REFACTOR - LESS STATE, MORE FUNCTIONS?
 */
 
 /* PROD:
@@ -32,6 +31,7 @@
 */
 /* LESSONS LEARNED:
 // FORMS (BUTTONS ARE TYPE="SUBMIT" BY DEFAULT)
+// IIFES HAVE PRIVATE SCOPE
 // RESOURCE CONTROL: THROTTLING, CACHING, TOKEN LIMIT
 // LOGGING, MIDDLEWARE, MODULES
 // ENVIRONMENT VARIABLES, DIRECTORY STRUCTURE
@@ -57,8 +57,9 @@ const peekaboo = document.querySelector('.peekaboo');
 // STATE
 
 const usedPrompts = {};
-let audio, analyser, userStream, throttleTimer, formText;
-let voiceAllowed = true;
+let audio, analyser, userStream, formText;
+let throttleTimer, listenTimer;
+let listening = false;
 
 const canvas = document.querySelector(".waveform");
 const canvasCtx = canvas.getContext("2d");
@@ -73,14 +74,32 @@ const stt = new webkitSpeechRecognition;
 // FUNCTIONS
 
 const handleVoice = () => {
-    if (voiceAllowed) {
+    if (!listening) {
 
         middleSlide.classList.add('slide-out');
         setTimeout(() => {
             listen.classList.remove('hide');
         }, 100);
-
+        stt.addEventListener('start', () => {
+            listening = true;
+        });
         stt.start();
+
+        // stop listening if 3 seconds pass without audio
+
+        if (listenTimer) {
+            return;
+        } else {
+            listenTimer = setTimeout(() => {
+                middleSlide.classList.remove('slide-out');
+                stt.stop();
+                setTimeout(() => {
+                    listen.classList.add('hide')
+                }, 100);
+                listening = false; // reusable function?
+                listenTimer = null;
+            }, 3000);
+        }
 
         stt.addEventListener('speechend', stt.stop);
         stt.addEventListener('result', (e) => {
@@ -94,9 +113,15 @@ const handleVoice = () => {
 
 const handleAsk = async (prompt) => {
     if (textArea.value.length > 0) {
-
         middleSlide.classList.add('slide-out');
-        voiceAllowed = false;
+        
+        // check - was text sent during listening? if so, stop listening + clear listenTimer
+        if (listening) {
+            stt.stop();
+            listen.classList.add('hide')
+            clearTimeout(listenTimer);
+            listening = false;
+        }
 
         // check - has audio been initialized?
         if (audio) {
@@ -107,7 +132,7 @@ const handleAsk = async (prompt) => {
                 audio.addEventListener('ended', () => {
                     middleSlide.classList.remove('slide-out');
                     canvas.classList.add('hide');
-                    voiceAllowed = true;
+                    listening = true;
                 });
 
                 const audioCtx = new AudioContext();
