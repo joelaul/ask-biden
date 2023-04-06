@@ -1,22 +1,16 @@
-/* DEV:
-// IMESSAGE LOG ON RIGHT (TRANS FADE)
-// MAKE SUGGESTION WHEEL, ADD SUGGESTIONS (TRANS FADE)
-// SEND REQUESTS WITH CONTEXT
+// BG FALLING STARS/CONFETTI AND KAZOO; LOAD STATIC
+// RESPONSIVE DESIGN
 
-// MOVE THROTTLE TO BACKEND?
-// BG FALLING STARS/CONFETTI; JOE STATIC/SPIN
-// "DOUBLE IT AND GIVE IT TO THE NEXT PERSON"
-// REFACTOR - LESS STATE, MORE FUNCTIONS?
-*/
+// THROTTLE ON BACKEND INSTEAD? DOUBLE CHECK CONDITIONS
+// SEND FULL CONTEXT ON BACKEND
 
 /* PROD:
+// REFACTOR - LESS STATE, MORE FUNCTIONS?
 // REMOVE FUNNY BUSINESS (HAVE A PERSONAL FORK)
-// PRETTIER
-// JEST UNIT TESTING, ERROR HANDLING
+// LINT, TEST, ERROR HANDLING
 // DEPLOY TO GLITCH
 // README: DEPLOYMENT GUIDE FOR DEVS, ARCHITECTURE FLOWCHART
 // VIDEO, BLOG
-// ELI5 TO RECRUITERS
 */
 /* TOOLS AND TECH:
 // WEB SPEECH
@@ -39,7 +33,7 @@
 */
 /* DOWN THE ROAD:
 // LESS HAPHAZARD ELEMENT POSITIONING?
-// TRY FIXED INSTEAD OF ABSOLUTE
+// HOW DO I DO DYNAMIC INNERHTML INJECTIONS WITHOUT FUCKING UP EVENT LISTENERS? HOW DID THE GPT-CLONE VERSION WORK
 */
 
 // DOM
@@ -51,15 +45,20 @@ const submit = document.querySelectorAll('form button')[1];
 const loader = document.querySelector('.loader');
 const listen = document.querySelector('.listen');
 const suggestions = document.querySelectorAll('.suggestion-buttons button');
+const contentWrapper = document.querySelector('.content-wrapper');
 const middleSlide = document.querySelector('.middle-slide');
-const peekaboo = document.querySelector('.peekaboo');
+let chatContainer;
 
 // STATE
+
+const sendSoundUrl = require('url:./assets/send.mp3');
+const sendSound = new Audio(sendSoundUrl);
+sendSound
 
 const usedPrompts = {};
 let audio, analyser, userStream, formText;
 let throttleTimer, listenTimer;
-let listening = false;
+let listening, sending = false;
 
 const canvas = document.querySelector(".waveform");
 const canvasCtx = canvas.getContext("2d");
@@ -74,16 +73,15 @@ const stt = new webkitSpeechRecognition;
 // FUNCTIONS
 
 const handleVoice = () => {
-    if (!listening) {
+    if (!listening && !sending) {
 
+        stt.start();
+        listening = true;
         middleSlide.classList.add('slide-out');
         setTimeout(() => {
             listen.classList.remove('hide');
         }, 100);
-        stt.addEventListener('start', () => {
-            listening = true;
-        });
-        stt.start();
+        
 
         // stop listening if 3 seconds pass without audio
 
@@ -112,27 +110,41 @@ const handleVoice = () => {
 }
 
 const handleAsk = async (prompt) => {
-    if (textArea.value.length > 0) {
+    if (textArea.value.length > 0 && (!throttleTimer || audio.ended)) {
+        sending = true;
+        sendSound.play();
         middleSlide.classList.add('slide-out');
+        textArea.value = '';
+
+        // offset middleContainer on first chatContainer injection
+        if (!chatContainer) {
+            chatContainer = document.createElement('div');
+            chatContainer.classList.add('chat-container');
+            contentWrapper.append(chatContainer);
+        }
         
         // check - was text sent during listening? if so, stop listening + clear listenTimer
         if (listening) {
             stt.stop();
             listen.classList.add('hide')
+            console.log('listening should not be visible');
             clearTimeout(listenTimer);
             listening = false;
         }
 
         // check - has audio been initialized?
         if (audio) {
-            if (!audio.ended) audio.pause();
+            if (!audio.ended) {
+                audio.pause();
+                canvas.classList.add('hide');
+            }
         } else {
             (initAudio = () => {
                 audio = new Audio();
                 audio.addEventListener('ended', () => {
                     middleSlide.classList.remove('slide-out');
                     canvas.classList.add('hide');
-                    listening = true;
+                    listening = false;
                 });
 
                 const audioCtx = new AudioContext();
@@ -147,20 +159,24 @@ const handleAsk = async (prompt) => {
 
         // check - has it been asked? (Y = memo, N = throttle/fetch)
         if (usedPrompts[prompt]) {
-            audio.src = usedPrompts[prompt]
+            audio.src = usedPrompts[prompt][0];
         } else {
-            // throttle request for 7 seconds
+            // throttle request for 5 seconds
             if (throttleTimer) {
                 return;
             } else {
+                const userBubbleDiv = document.createElement('div');
+                userBubbleDiv.classList.add('chat-bubble', 'user');
+                userBubbleDiv.innerText = prompt;
+                chatContainer.append(userBubbleDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+
                 // display loader 
                 loader.classList.remove('hide');
-                canvas.classList.add('hide');
-
                 throttleTimer = setTimeout(() => {
                 clearTimeout(throttleTimer);
                 throttleTimer = null;
-                }, 7000); 
+                }, 5000); 
 
                 const response = await fetch('http://localhost:8000', 
                 {
@@ -172,12 +188,21 @@ const handleAsk = async (prompt) => {
                 });
 
                 if (response.ok) {
-                    const blob = await response.blob();
+                    const data = await response.json();
+                    const text = data.text;
+                    const audioBuffer = new Uint8Array(data.audio.data);
+                    const blob = new Blob([audioBuffer], { type: 'audio/mpeg' });
                     const url = URL.createObjectURL(blob);
                     audio.src = url;
-                    
+
+                    const joeBubbleDiv = document.createElement('div');
+                    joeBubbleDiv.classList.add('chat-bubble', 'joe');
+                    joeBubbleDiv.innerText = text;
+                    chatContainer.append(joeBubbleDiv);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+
                     loader.classList.add('hide');
-                    usedPrompts[prompt] = url;
+                    usedPrompts[prompt] = [url, text];
                 }
             }
         }
@@ -215,13 +240,13 @@ const handleAsk = async (prompt) => {
             canvasCtx.stroke();
         };
         draw();
+        sending = false;
     }   
 }
 
 // INIT
 
 const init = () => {
-    
     for (let suggestion of suggestions) {
         suggestion.addEventListener('click', () => {
             textArea.value = suggestion.innerText;
@@ -234,18 +259,20 @@ const init = () => {
         handleAsk(formText);
     });
 
-    voice.addEventListener('click', (e) => {
-        e.preventDefault();
-        handleVoice();
-    });
-
-    textArea.addEventListener('keydown', (e) => {
+    document.body.addEventListener('keydown', (e) => {
         if (e.key == 'Enter') {
             e.preventDefault();
             formText = new FormData(form).get('prompt');
             handleAsk(formText);
         }
     });
+
+    voice.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleVoice();
+    });
+
+    textArea.focus();
 }
 
 init();

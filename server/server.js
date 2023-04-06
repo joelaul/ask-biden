@@ -76,13 +76,11 @@ app.post('/', async (req, res) => {
 
     if (response.ok) {
         const blob = await response.blob();
-        console.log(blob);
-
-        res.type(blob.type);
-        blob.arrayBuffer()
-            .then((buf) => {
-            res.status(200).send(Buffer.from(buf));
-        })
+        const buf = await blob.arrayBuffer();
+        const audio = Buffer.from(buf);
+        res.type('application/json');
+        res.status(200).send
+        ({ 'audio': audio, 'text': gptContent });
     }
 });
 
