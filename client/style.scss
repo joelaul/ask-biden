@@ -81,8 +81,12 @@ body {
     
             img {
                 border-radius: 6px;
-                pointer-events: none;
+                cursor: pointer;
                 user-select: none;
+                
+                &:active {
+                    transform: scale(95%);
+                }
             }
     
             .peekaboo {

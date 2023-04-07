@@ -1,3 +1,8 @@
+// IMPORTS
+
+const confetti = require('./node_modules/canvas-confetti/src/confetti');
+const sounds = require('./sounds');
+
 // DOM
 
 const form = document.querySelector('form');
@@ -9,6 +14,7 @@ const listen = document.querySelector('.listen');
 const suggestions = document.querySelectorAll('.suggestion-buttons button');
 const contentWrapper = document.querySelector('.content-wrapper');
 const middleSlide = document.querySelector('.middle-slide');
+const biden = document.querySelector('.middle-top img');
 let chatContainer;
 
 // STATE
@@ -28,8 +34,6 @@ canvasCtx.fillStyle = "rgb(255, 255, 255)";
 canvasCtx.strokeStyle = "rgb(0, 0, 0)";
 canvasCtx.lineWidth = 2;
 const stt = new webkitSpeechRecognition;
-const sendSoundUrl = require('url:./assets/send.mp3');
-const sendSound = new Audio(sendSoundUrl);
 
 // FUNCTIONS
 
@@ -51,6 +55,8 @@ const initAudio = () => {
 }
 
 const startListening = () => {
+    sounds.listenStartSound.play();
+
     stt.start();
     listening = true;
     middleSlide.classList.add('slide-out');
@@ -60,6 +66,8 @@ const startListening = () => {
 }
 
 const stopListening = () => {
+    sounds.listenStopSound.play();
+
     stt.stop();
     listen.classList.add('hide')
     clearTimeout(listenTimer);
@@ -218,7 +226,7 @@ const handleAsk = async (prompt) => {
         if (usedPrompts[prompt]) {
             audio.src = usedPrompts[prompt][0];
         } else {
-            // throttle requests for 5 seconds
+            // throttle requests for 5 seconds 
             if (throttleTimer) {
                 return;
             } else {
@@ -228,7 +236,7 @@ const handleAsk = async (prompt) => {
                     }, 5000);
 
                 renderUserBubble(prompt);
-                sendSound.play();
+                sounds.sentSound.play();
 
                 // show loader
                 setTimeout(() => {
@@ -259,6 +267,7 @@ const handleAsk = async (prompt) => {
 const init = () => {
     for (let suggestion of suggestions) {
         suggestion.addEventListener('click', () => {
+            sounds.suggestionSound.play();
             textArea.value = suggestion.innerText;
         });
     }
@@ -280,6 +289,13 @@ const init = () => {
     voice.addEventListener('click', (e) => {
         e.preventDefault();
         handleVoice();
+    });
+
+    biden.addEventListener('click', () => {
+        confetti({ 
+            particleCount: 25,
+        });
+        sounds.confettiSound.play();
     });
 
     textArea.focus();
