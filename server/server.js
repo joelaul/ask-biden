@@ -1,3 +1,9 @@
+/* TODO
+
+SEND FULL CONVERSATION TO API
+
+*/
+
 // DEPS
 
 require('dotenv').config();

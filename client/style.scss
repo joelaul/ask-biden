@@ -1,3 +1,9 @@
+/* TODO
+
+RESPONSIVE DESIGN
+
+*/
+
 @import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
 
 * {
@@ -6,9 +12,9 @@
 }
 
 body {
-    margin: 20px;
     min-height: 100vh;
     background: linear-gradient(firebrick, white, rgb(135, 167, 235));
+    
     scrollbar-width: none;
     -ms-overflow-style: none;
 
@@ -28,10 +34,6 @@ body {
         margin: 5px;
         word-wrap: break-word;
         cursor: pointer;
-    
-        &:active {
-            transform: scale(90%);
-        }
     }
 }
 
@@ -45,7 +47,7 @@ body {
 }
 
 .header {
-    margin: 25px;
+    margin: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -67,6 +69,8 @@ body {
     max-width: 640px;
     display: flex;
     justify-content: center;
+    position: relative;
+    left: 5px;
 
     .middle-container {
         margin: 0 auto;
@@ -91,7 +95,7 @@ body {
     
                 canvas {
                     position: absolute;
-                    top: 165px;
+                    top: 163px;
                     left: 0px;
                     
                     padding-left: 3px;
@@ -143,11 +147,11 @@ body {
     
         .middle-slide {
             margin: 10px;
-            position: relative;
             z-index: 1;
-            top: -10px; // animate -10px to 30px to reveal peekaboo
-    
-            transition: transform 200ms ease-in-out;
+            position: relative;
+            top: -10px;
+
+            transition: transform 200ms ease-in;
     
             form {
                 margin-top: 25px;
@@ -205,16 +209,42 @@ body {
             
             h2 {
                 text-align: center;
-                padding-top: 10px;
             }
     
             .suggestion-buttons {
                 display: grid;
+
+                overflow-y: scroll;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+                mask-image: linear-gradient(to bottom, black 95%, transparent 100%);
+                
+        
+                &::-webkit-scrollbar {
+                    display: none;
+                }
+
+                button {
+                    border-radius: 7px;
+                    border: transparent;
+                    background: #de7474;
+                    color: white;
+                    padding: 9px;
+                    text-align: left;
+
+                    &:hover {
+                        transform: scale(103%);
+                    }
+            
+                    &:active {
+                        transform: scale(97%);
+                    }
+                }
             }
         }
     }
     
-    .chat-container { // dynamically add chatbubbles for user and joe
+    .chat-container {
         margin: 0 auto;
         padding: 5px;
         max-width: 300px;
@@ -273,5 +303,14 @@ body {
 .joe {
     align-self: flex-start;
     background: #0878F8;
-    color: #E7F8F8
+    color: #E7F8F8;
+    cursor: pointer;
+
+    &:hover {
+        transform: scale(103%);
+    }
+
+    &:active {
+        transform: scale(97%);
+    }
 }

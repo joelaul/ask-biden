@@ -1,43 +1,12 @@
-// BG FALLING STARS/CONFETTI AND KAZOO; LOAD STATIC
-// RESPONSIVE DESIGN
+/* TODO
 
-// THROTTLE ON BACKEND INSTEAD? DOUBLE CHECK CONDITIONS
-// SEND FULL CONTEXT ON BACKEND
+FX - LOAD STATIC, CONFETTI, FALLING STARS
 
-/* PROD:
-// REFACTOR - LESS STATE, MORE FUNCTIONS?
-// REMOVE FUNNY BUSINESS (HAVE A PERSONAL FORK)
-// LINT, TEST, ERROR HANDLING
-// DEPLOY TO GLITCH
-// README: DEPLOYMENT GUIDE FOR DEVS, ARCHITECTURE FLOWCHART
-// VIDEO, BLOG
-*/
-/* TOOLS AND TECH:
-// WEB SPEECH
-// WEB AUDIO
-// CANVAS
-// OPENAI
-// ELEVENLABS
-// EXPRESS, DOTENV
-// SASS
-// PARCEL
-// TERMINAL
-*/
-/* LESSONS LEARNED:
-// FORMS (BUTTONS ARE TYPE="SUBMIT" BY DEFAULT)
-// IIFES HAVE PRIVATE SCOPE
-// RESOURCE CONTROL: THROTTLING, CACHING, TOKEN LIMIT
-// LOGGING, MIDDLEWARE, MODULES
-// ENVIRONMENT VARIABLES, DIRECTORY STRUCTURE
-// BLOBS, OBJECT URLS, BUFFERS (BINARY)
-*/
-/* DOWN THE ROAD:
-// LESS HAPHAZARD ELEMENT POSITIONING?
-// HOW DO I DO DYNAMIC INNERHTML INJECTIONS WITHOUT FUCKING UP EVENT LISTENERS? HOW DID THE GPT-CLONE VERSION WORK
+SEND FULL CONVERSATION TO API
+
 */
 
 // DOM
-
 const form = document.querySelector('form');
 const textArea = document.querySelector('textarea');
 const voice = document.querySelectorAll('form button')[0];
@@ -51,12 +20,10 @@ let chatContainer;
 
 // STATE
 
-const sendSoundUrl = require('url:./assets/send.mp3');
-const sendSound = new Audio(sendSoundUrl);
-sendSound
-
 const usedPrompts = {};
-let audio, analyser, userStream, formText;
+const userBubbleIDs = [], joeBubbleDivs = [];
+
+let audio, analyser, dataArray, formText;
 let throttleTimer, listenTimer;
 let listening, sending = false;
 
@@ -67,13 +34,86 @@ canvas.width = WIDTH, canvas.height = HEIGHT;
 canvasCtx.fillStyle = "rgb(255, 255, 255)";
 canvasCtx.strokeStyle = "rgb(0, 0, 0)";
 canvasCtx.lineWidth = 2;
-
 const stt = new webkitSpeechRecognition;
+const sendSoundUrl = require('url:./assets/send.mp3');
+const sendSound = new Audio(sendSoundUrl);
 
 // FUNCTIONS
 
+const makeUniqueID = () => {
+    const timeStamp = Date.now();
+    const randomNumber = Math.random();
+    const hex = randomNumber.toString(16);
+
+    return `id-${timeStamp}-${hex}`;
+}
+
+const initAudio = () => {
+    audio = new Audio();
+    audio.addEventListener('ended', () => {
+        middleSlide.classList.remove('slide-out');
+        canvas.classList.add('hide');
+        listening = false;
+    });
+
+    const audioCtx = new AudioContext();
+    const audioNode = audioCtx.createMediaElementSource(audio);
+    analyser = new AnalyserNode(audioCtx);
+    analyser.fftSize = 2048;
+
+    audioNode.connect(analyser);
+    analyser.connect(audioCtx.destination);
+};
+
+const draw = () => {
+    canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
+    requestAnimationFrame(draw);
+    analyser.getByteTimeDomainData(dataArray); 
+
+    const delta = (WIDTH * 1.0) / analyser.fftSize;
+    let x = 0;
+    canvasCtx.beginPath();
+
+    for (let i = 0; i < analyser.fftSize; i++) {
+        let v = dataArray[i] / 128.0; // -128 < dataArray[i] < 128; -1 < v < 1
+        let y = (v * HEIGHT) / 2; // -HEIGHT/2 < y < HEIGHT/2
+
+        if (i === 0) {
+            canvasCtx.moveTo(x, y);
+        } else {
+            canvasCtx.lineTo(x, y);
+        }
+
+        x += delta;
+    }
+
+    canvasCtx.lineTo(WIDTH, HEIGHT / 2);
+    canvasCtx.stroke();
+};
+
+const armJoeBubbles = () => {
+    for (let i = 0; i < joeBubbleDivs.length; i++) {
+        joeBubbleDivs[i].addEventListener('click', () => {
+            handleJoeBubble(userBubbleIDs[i]);
+        })
+    }
+}
+
+const handleJoeBubble = (id) => {    
+    const itsPrompt = document.getElementById(id).innerText;
+    const itsAudio = usedPrompts[itsPrompt][0];
+    audio.src = itsAudio;
+
+    middleSlide.classList.add('slide-out');
+    dataArray = new Uint8Array(analyser.fftSize); 
+
+    audio.play();
+    canvas.classList.remove('hide');
+    draw();
+}
+
 const handleVoice = () => {
-    if (!listening && !sending) {
+    if (!listening && !sending && audio.ended) {
 
         stt.start();
         listening = true;
@@ -81,10 +121,8 @@ const handleVoice = () => {
         setTimeout(() => {
             listen.classList.remove('hide');
         }, 100);
-        
 
         // stop listening if 3 seconds pass without audio
-
         if (listenTimer) {
             return;
         } else {
@@ -110,9 +148,8 @@ const handleVoice = () => {
 }
 
 const handleAsk = async (prompt) => {
-    if (textArea.value.length > 0 && (!throttleTimer || audio.ended)) {
+    if (textArea.value.length > 0) {
         sending = true;
-        sendSound.play();
         middleSlide.classList.add('slide-out');
         textArea.value = '';
 
@@ -127,7 +164,6 @@ const handleAsk = async (prompt) => {
         if (listening) {
             stt.stop();
             listen.classList.add('hide')
-            console.log('listening should not be visible');
             clearTimeout(listenTimer);
             listening = false;
         }
@@ -139,45 +175,39 @@ const handleAsk = async (prompt) => {
                 canvas.classList.add('hide');
             }
         } else {
-            (initAudio = () => {
-                audio = new Audio();
-                audio.addEventListener('ended', () => {
-                    middleSlide.classList.remove('slide-out');
-                    canvas.classList.add('hide');
-                    listening = false;
-                });
-
-                const audioCtx = new AudioContext();
-                const audioNode = audioCtx.createMediaElementSource(audio);
-                analyser = new AnalyserNode(audioCtx);
-                analyser.fftSize = 2048;
-
-                audioNode.connect(analyser);
-                analyser.connect(audioCtx.destination);
-            })();
+            initAudio();
         }
 
-        // check - has it been asked? (Y = memo, N = throttle/fetch)
+        // check - has it been asked? (Y = use cache, N = throttle/fetch)
         if (usedPrompts[prompt]) {
             audio.src = usedPrompts[prompt][0];
         } else {
-            // throttle request for 5 seconds
+            // throttle requests for 5 seconds
             if (throttleTimer) {
                 return;
             } else {
-                const userBubbleDiv = document.createElement('div');
-                userBubbleDiv.classList.add('chat-bubble', 'user');
-                userBubbleDiv.innerText = prompt;
-                chatContainer.append(userBubbleDiv);
-                chatContainer.scrollTop = chatContainer.scrollHeight;
+                // show loader, render user chat bubble
+                sendSound.play();
 
-                // display loader 
-                loader.classList.remove('hide');
+                setTimeout(() => {
+                    loader.classList.remove('hide')
+                }, 100);
                 throttleTimer = setTimeout(() => {
                 clearTimeout(throttleTimer);
                 throttleTimer = null;
                 }, 5000); 
 
+                let userBubbleDiv = document.createElement('div');
+                userBubbleDiv.classList.add('chat-bubble', 'user');
+                userBubbleDiv.innerText = prompt;
+
+                userBubbleDiv.id = makeUniqueID();
+                userBubbleIDs.push(userBubbleDiv.id);
+
+                chatContainer.append(userBubbleDiv);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                // get biden response
                 const response = await fetch('http://localhost:8000', 
                 {
                     method: 'POST',
@@ -187,6 +217,7 @@ const handleAsk = async (prompt) => {
                     body: JSON.stringify({ prompt: prompt })
                 });
 
+                // render biden response
                 if (response.ok) {
                     const data = await response.json();
                     const text = data.text;
@@ -195,13 +226,18 @@ const handleAsk = async (prompt) => {
                     const url = URL.createObjectURL(blob);
                     audio.src = url;
 
-                    const joeBubbleDiv = document.createElement('div');
+                    let joeBubbleDiv = document.createElement('div');
                     joeBubbleDiv.classList.add('chat-bubble', 'joe');
                     joeBubbleDiv.innerText = text;
+
+                    joeBubbleDivs.push(joeBubbleDiv);
                     chatContainer.append(joeBubbleDiv);
+
+                    // hide loader, refresh chat log
+                    loader.classList.add('hide');
                     chatContainer.scrollTop = chatContainer.scrollHeight;
 
-                    loader.classList.add('hide');
+                    // cache response for re-use
                     usedPrompts[prompt] = [url, text];
                 }
             }
@@ -210,36 +246,12 @@ const handleAsk = async (prompt) => {
         setTimeout(() => {
             canvas.classList.remove('hide')
         }, 100);
-        const dataArray = new Uint8Array(analyser.fftSize); 
+        dataArray = new Uint8Array(analyser.fftSize); 
+        
         audio.play();
-
-        // draw visualization to canvas (60 snapshots per second)
-        const draw = () => {
-            canvasCtx.clearRect(0, 0, WIDTH, HEIGHT);
-            requestAnimationFrame(draw);
-            analyser.getByteTimeDomainData(dataArray); 
-
-            const delta = (WIDTH * 1.0) / analyser.fftSize;
-            let x = 0;
-            canvasCtx.beginPath();
-
-            for (let i = 0; i < analyser.fftSize; i++) {
-                let v = dataArray[i] / 128.0; // -128 < dataArray[i] < 128; -1 < v < 1
-                let y = (v * HEIGHT) / 2; // -HEIGHT/2 < y < HEIGHT/2
-
-                if (i === 0) {
-                    canvasCtx.moveTo(x, y);
-                } else {
-                    canvasCtx.lineTo(x, y);
-                }
-
-                x += delta;
-            }
-
-            canvasCtx.lineTo(WIDTH, HEIGHT / 2);
-            canvasCtx.stroke();
-        };
         draw();
+
+        armJoeBubbles();
         sending = false;
     }   
 }
