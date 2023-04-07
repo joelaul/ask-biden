@@ -1,9 +1,3 @@
-/* TODO
-
-RESPONSIVE DESIGN
-
-*/
-
 @import url('https://fonts.googleapis.com/css?family=Muli&display=swap');
 
 * {
@@ -51,9 +45,10 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    left: 6px;
 
     h1 {
-        text-align: center;
         font-size: 55;
         margin: 0;
     }
