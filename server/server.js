@@ -1,10 +1,4 @@
-/* TODO
-
-SEND FULL CONVERSATION TO API
-
-*/
-
-// DEPS
+// IMPORTS
 
 require('dotenv').config();
 const { logger } = require('./logger');
@@ -37,8 +31,8 @@ app.use(express.json());
 
 // SERVER ROUTES
 
-app.get('/', async (req, res) => {
-    res.status(200).send({ message: "Entering a URL into the browser sends a GET request to that URL." });  
+app.get('/', (req, res) => {
+    res.status(200).send({ message: "Ask Biden!" });  
 }); 
 
 app.post('/', async (req, res) => {    
@@ -52,7 +46,9 @@ app.post('/', async (req, res) => {
     model: "gpt-3.5-turbo",
     temperature: 0.5,
     max_tokens: MAX_TOKENS,
-    messages: [{ "role": "user", "content": `Respond in less than ${MAX_TOKENS} tokens. ${prompt}` }],
+    messages: [
+        { "role": "user", "content": `Respond in less than ${MAX_TOKENS} tokens. ${prompt}` }
+    ],
     });
     const gptContent = gpt.data.choices[0].message.content;
     console.log(gptContent);
@@ -78,7 +74,7 @@ app.post('/', async (req, res) => {
         })
     });
 
-    // BUFFER RESPONSE AND SERVE CLIENT
+    // BUFFER AUDIO AND SERVE CLIENT
 
     if (response.ok) {
         const blob = await response.blob();

@@ -12,7 +12,7 @@ const listenStopSound = new Audio(listenStopSoundUrl);
 suggestionSound.volume = 0.4;
 listenStartSound.volume = 0.1;
 listenStopSound.volume = 0.1;
-confettiSound.volume = 0.1;
+confettiSound.volume = 0.2;
 
 module.exports = {
     sentSound,

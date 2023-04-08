@@ -12,6 +12,9 @@ body {
     scrollbar-width: none;
     -ms-overflow-style: none;
 
+    transition: opacity 500ms linear;
+    opacity: 1;
+
     &::-webkit-scrollbar {
         display: none;
     }
@@ -41,6 +44,7 @@ body {
 }
 
 .header {
+    z-index: 1;
     margin: 15px;
     display: flex;
     flex-direction: column;
@@ -60,6 +64,8 @@ body {
 }
 
 .content-wrapper {
+    z-index: 1;
+
     margin: 0 auto;
     max-width: 640px;
     display: flex;
@@ -73,7 +79,7 @@ body {
         
         position: relative;
         right: 0px; // adjust to make room for imessage log
-        transition: transform 300ms ease-in-out;
+        transition: transform 200ms ease-in-out;
         
         .middle-top {
             position: relative;
@@ -286,7 +292,7 @@ body {
 /* UTILITY CLASSES */
 
 .hide {
-    opacity: 0%;
+    opacity: 0;
 }
 
 .slide-out {

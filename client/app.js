@@ -1,3 +1,14 @@
+/* TODO
+
+// VOICE - DONT SLIDE-OUT IF USER ASKS DURING THROTTLE PERIOD
+// VOICE - ONLY PLAY listenStopSound if 3 seconds pass, not if speech is sent
+// VOICE - MAKE VOICE RECOG MORE PATIENT
+// PROMPTS WITH STRANGE CHARACTERS (CODE) CAN'T BE INDEXED IN USEDPROMPTS, JOEBUBBLES ARE NOT REPLAYABLE
+// play() DOMException
+// SEND FULL CONVO STATE IN OPENAI CALL
+
+*/
+
 // IMPORTS
 
 const confetti = require('./node_modules/canvas-confetti/src/confetti');
@@ -41,7 +52,9 @@ const initAudio = () => {
     audio = new Audio();
     audio.addEventListener('ended', () => {
         middleSlide.classList.remove('slide-out');
-        canvas.classList.add('hide');
+        setTimeout(() => { 
+            canvas.classList.add('hide')
+        }, 200);
         listening = false;
     });
 
@@ -69,8 +82,10 @@ const stopListening = () => {
     sounds.listenStopSound.play();
 
     stt.stop();
-    listen.classList.add('hide')
-    clearTimeout(listenTimer);
+    setTimeout(() => {
+        listen.classList.add('hide')
+    }, 200)
+    listenTimer = null;
     listening = false;
 }
 
@@ -163,13 +178,12 @@ const repopulateJoeBubbles = () => {
 // HANDLERS
 
 const handleJoeBubble = (id) => {
+    audio.src = '';
     const itsPrompt = document.getElementById(id).innerText;
     const itsAudio = usedPrompts[itsPrompt][0];
     audio.src = itsAudio;
 
     middleSlide.classList.add('slide-out');
-    dataArray = new Uint8Array(analyser.fftSize); 
-
     playJoeResponse();
 }
 
@@ -231,7 +245,6 @@ const handleAsk = async (prompt) => {
                 return;
             } else {
                 throttleTimer = setTimeout(() => {
-                    clearTimeout(throttleTimer);
                     throttleTimer = null;
                     }, 5000);
 
@@ -241,7 +254,7 @@ const handleAsk = async (prompt) => {
                 // show loader
                 setTimeout(() => {
                     loader.classList.remove('hide')
-                }, 100);
+                }, 200);
                 
                 // get joe response
                 const response = await fetch('http://localhost:8000', 
@@ -259,6 +272,8 @@ const handleAsk = async (prompt) => {
         playJoeResponse();
         repopulateJoeBubbles();
         sending = false;
+
+        console.log(usedPrompts);
     }
 }
 
@@ -296,6 +311,10 @@ const init = () => {
             particleCount: 25,
         });
         sounds.confettiSound.play();
+    });
+
+    window.addEventListener('load', () => {
+        document.body.classList.remove('hide');
     });
 
     textArea.focus();
