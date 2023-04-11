@@ -36,6 +36,17 @@ body {
 
 /* TOP LEVEL DIVS */
 
+.dim-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: black;
+    opacity: 0.2;
+    transition: opacity 200ms linear;
+}
+
 .fork-me {
     z-index: 10;
     position: fixed;
@@ -55,6 +66,7 @@ body {
     h1 {
         font-size: 55;
         margin: 0;
+        color: black;
     }
 
     p {
@@ -111,6 +123,7 @@ body {
                     position: absolute;
                     left: 10px;
                     transition: opacity 175ms linear;
+                    font-weight: 900;
                 }
                 
                 .loader {

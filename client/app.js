@@ -1,14 +1,3 @@
-/* TODO
-
-// VOICE - DONT SLIDE-OUT IF USER ASKS DURING THROTTLE PERIOD
-// VOICE - ONLY PLAY listenStopSound if 3 seconds pass, not if speech is sent
-// VOICE - MAKE VOICE RECOG MORE PATIENT
-// PROMPTS WITH STRANGE CHARACTERS (CODE) CAN'T BE INDEXED IN USEDPROMPTS, JOEBUBBLES ARE NOT REPLAYABLE
-// play() DOMException
-// SEND FULL CONVO STATE IN OPENAI CALL
-
-*/
-
 // IMPORTS
 
 const confetti = require('./node_modules/canvas-confetti/src/confetti');
@@ -27,6 +16,7 @@ const contentWrapper = document.querySelector('.content-wrapper');
 const middleSlide = document.querySelector('.middle-slide');
 const biden = document.querySelector('.middle-top img');
 let chatContainer;
+const dim = document.querySelector('.dim-overlay');
 
 // STATE
 
@@ -68,10 +58,12 @@ const initAudio = () => {
 }
 
 const startListening = () => {
+    listening = true;
+    stt.start();
     sounds.listenStartSound.play();
 
-    stt.start();
-    listening = true;
+    // display
+    dim.classList.remove('hide');
     middleSlide.classList.add('slide-out');
     setTimeout(() => {
         listen.classList.remove('hide');
@@ -79,14 +71,16 @@ const startListening = () => {
 }
 
 const stopListening = () => {
-    sounds.listenStopSound.play();
-
+    listening = false;
     stt.stop();
+    clearTimeout(listenTimer);
+    listenTimer = null;
+
+    // display
+    dim.classList.add('hide');
     setTimeout(() => {
         listen.classList.add('hide')
     }, 200)
-    listenTimer = null;
-    listening = false;
 }
 
 const makeUniqueID = () => {
@@ -189,14 +183,15 @@ const handleJoeBubble = (id) => {
 
 const handleVoice = () => {
     if (!listening && !sending && (!audio || audio.ended)) {
-        startListening();
 
         // stop listening if 3 seconds pass without audio
         if (listenTimer) {
             return;
         } else {
+            startListening();
             listenTimer = setTimeout(() => {
                 middleSlide.classList.remove('slide-out');
+                sounds.listenStopSound.play();
                 stopListening();
             }, 3000);
         }
@@ -205,14 +200,13 @@ const handleVoice = () => {
         stt.addEventListener('result', (e) => {
             let transcript = e.results[0][0].transcript;
             textArea.value = transcript;
-            listen.classList.add('hide');
             handleAsk(transcript);
         });
     }
 }
 
 const handleAsk = async (prompt) => {
-    if (textArea.value.length > 0) {
+    if (textArea.value.length > 0 && !throttleTimer) {
         sending = true;
         middleSlide.classList.add('slide-out');
         textArea.value = '';
@@ -240,33 +234,30 @@ const handleAsk = async (prompt) => {
         if (usedPrompts[prompt]) {
             audio.src = usedPrompts[prompt][0];
         } else {
+
             // throttle requests for 5 seconds 
-            if (throttleTimer) {
-                return;
-            } else {
-                throttleTimer = setTimeout(() => {
-                    throttleTimer = null;
-                    }, 5000);
+            throttleTimer = setTimeout(() => {
+                throttleTimer = null;
+                }, 5000);
 
-                renderUserBubble(prompt);
-                sounds.sentSound.play();
+            renderUserBubble(prompt);
+            sounds.sentSound.play();
 
-                // show loader
-                setTimeout(() => {
-                    loader.classList.remove('hide')
-                }, 200);
-                
-                // get joe response
-                const response = await fetch('http://localhost:8000', 
-                {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ prompt: prompt })
-                });
-                if (response.ok) await renderJoeResponse(response, prompt);
-            }
+            // show loader
+            setTimeout(() => {
+                loader.classList.remove('hide')
+            }, 200);
+            
+            // get joe response
+            const response = await fetch('http://localhost:8000', 
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ prompt: prompt })
+            });
+            if (response.ok) await renderJoeResponse(response, prompt);
         }
 
         playJoeResponse();
@@ -321,3 +312,58 @@ const init = () => {
 }
 
 init();
+
+/* DEV:
+
+// MAKE VOICE RECOG MORE PATIENT
+
+// PROMPTS WITH STRANGE CHARACTERS (CODE) CAN'T BE INDEXED IN USEDPROMPTS, JOEBUBBLES ARE NOT REPLAYABLE
+
+// SEND FULL CONVO STATE IN OPENAI CALL
+
+*/
+
+/* PROD:
+
+// REMOVE FUNNY BUSINESS (HAVE A PERSONAL FORK)
+// LINT, TEST, ERROR HANDLING
+// WHY DOES NOTHING EVER DEPLOY PROPERLY
+// README: DEPLOYMENT GUIDE, DIAGRAM
+// VIDEO, BLOG
+// LINKEDIN / REDDIT / HACKERNEWS
+// PORTFOLIO SITE
+
+*/
+
+/* TECH:
+
+// WEB SPEECH
+// WEB AUDIO
+// CANVAS
+// OPENAI
+// ELEVENLABS
+// EXPRESS, DOTENV
+// SASS
+// PARCEL
+// TERMINAL
+// GIT
+
+*/
+
+/* LESSONS LEARNED:
+
+// FORMS (BUTTONS ARE TYPE="SUBMIT" BY DEFAULT)
+// IIFES HAVE FUNCTION SCOPE, NOT GLOBAL
+// CLEARTIMETOUT =/= NULLING A TIMER
+// RESOURCE CONTROL: THROTTLING, CACHING, TOKEN LIMIT
+// LOGGING, MIDDLEWARE, MODULES
+// ENVIRONMENT VARIABLES, DIRECTORY STRUCTURE
+// BLOBS, OBJECT URLS, BUFFERS (BINARY)
+*/
+
+/* DOWN THE ROAD:
+
+// LESS HAPHAZARD ELEMENT POSITIONING?
+// LESS REDUNDANT ALGORITHMS
+// DYNAMICALLY RENDERING ELEMENTS.. VANILLA PAIN POINT?
+*/
