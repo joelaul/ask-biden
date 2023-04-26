@@ -19,7 +19,8 @@ const MAX_TOKENS = 50;
 
 // CREDS - ELEVENLABS
 
-const voice_id = 'LckP2Hd96Vzr02lAF5IN'; // BIDEN
+// const voice_id = 'LckP2Hd96Vzr02lAF5IN'; // BIDEN
+const voice_id = 'iWvT3d6Mr8Zret8L4BO7' // TOSIN
 const voiceUrl = `https://api.elevenlabs.io/v1/text-to-speech/${voice_id}`;
 const apiKey = process.env.ELEVEN_API_KEY;
 
@@ -47,7 +48,7 @@ app.post('/', async (req, res) => {
     temperature: 0.5,
     max_tokens: MAX_TOKENS,
     messages: [
-        { "role": "user", "content": `Respond in less than ${MAX_TOKENS} tokens. ${prompt}` }
+        { "role": "user", "content": `Respond in less than ${MAX_TOKENS}: ${prompt}` }
     ],
     });
     const gptContent = gpt.data.choices[0].message.content;

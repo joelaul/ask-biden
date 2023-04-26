@@ -23,10 +23,6 @@ const dim = document.querySelector('.dim-overlay');
 const usedPrompts = {};
 const userBubbleIDs = [], joeBubbleDivs = [];
 
-let formText, audio, analyser, dataArray;
-let throttleTimer, listenTimer;
-let listening, sending = false;
-
 const canvas = document.querySelector(".waveform");
 const canvasCtx = canvas.getContext("2d");
 const HEIGHT = 66, WIDTH = 295;
@@ -35,6 +31,10 @@ canvasCtx.fillStyle = "rgb(255, 255, 255)";
 canvasCtx.strokeStyle = "rgb(0, 0, 0)";
 canvasCtx.lineWidth = 2;
 const stt = new webkitSpeechRecognition;
+
+let formText, audio, analyser, dataArray;
+let throttleTimer, listenTimer;
+let listening, sending = false;
 
 // FUNCTIONS
 
@@ -172,11 +172,9 @@ const repopulateJoeBubbles = () => {
 // HANDLERS
 
 const handleJoeBubble = (id) => {
-    audio.src = '';
     const itsPrompt = document.getElementById(id).innerText;
     const itsAudio = usedPrompts[itsPrompt][0];
     audio.src = itsAudio;
-
     middleSlide.classList.add('slide-out');
     playJoeResponse();
 }
@@ -189,12 +187,17 @@ const handleVoice = () => {
             return;
         } else {
             startListening();
+
             listenTimer = setTimeout(() => {
                 middleSlide.classList.remove('slide-out');
                 sounds.listenStopSound.play();
                 stopListening();
             }, 3000);
         }
+
+        stt.addEventListener('speechstart', () => {
+            clearTimeout(listenTimer);
+        })
 
         stt.addEventListener('speechend', stt.stop);
         stt.addEventListener('result', (e) => {
@@ -234,7 +237,6 @@ const handleAsk = async (prompt) => {
         if (usedPrompts[prompt]) {
             audio.src = usedPrompts[prompt][0];
         } else {
-
             // throttle requests for 5 seconds 
             throttleTimer = setTimeout(() => {
                 throttleTimer = null;
@@ -315,9 +317,9 @@ init();
 
 /* DEV:
 
-// MAKE VOICE RECOG MORE PATIENT
+// TIMEOUT ONLY IF NO SPEECH FOR 3 SEC PAST 'START'. KEEP LISTENING UNTIL 'SPEECHEND' OTHERWISE. EVENT LISTENER WITH SET INTERVAL? (IN GENERAL, MAKE WEB SPEECH MORE PATIENT)
 
-// PROMPTS WITH STRANGE CHARACTERS (CODE) CAN'T BE INDEXED IN USEDPROMPTS, JOEBUBBLES ARE NOT REPLAYABLE
+// KEEP FIRST LISTENING UNTIL USER EXITS MIC PROMPT
 
 // SEND FULL CONVO STATE IN OPENAI CALL
 
@@ -330,8 +332,7 @@ init();
 // WHY DOES NOTHING EVER DEPLOY PROPERLY
 // README: DEPLOYMENT GUIDE, DIAGRAM
 // VIDEO, BLOG
-// LINKEDIN / REDDIT / HACKERNEWS
-// PORTFOLIO SITE
+// LINKEDIN / REDDIT / HACKERNEWS / TWITTER
 
 */
 
@@ -352,9 +353,9 @@ init();
 
 /* LESSONS LEARNED:
 
-// FORMS (BUTTONS ARE TYPE="SUBMIT" BY DEFAULT)
+// FORMS (BUTTONS FIRE SUBMIT EVENT BY DEFAULT)
 // IIFES HAVE FUNCTION SCOPE, NOT GLOBAL
-// CLEARTIMETOUT =/= NULLING A TIMER
+// CLEARTIMEOUT =/= NULLING A TIMER
 // RESOURCE CONTROL: THROTTLING, CACHING, TOKEN LIMIT
 // LOGGING, MIDDLEWARE, MODULES
 // ENVIRONMENT VARIABLES, DIRECTORY STRUCTURE
