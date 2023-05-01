@@ -19,8 +19,8 @@ const MAX_TOKENS = 50;
 
 // CREDS - ELEVENLABS
 
-// const voice_id = 'LckP2Hd96Vzr02lAF5IN'; // BIDEN
-const voice_id = 'iWvT3d6Mr8Zret8L4BO7' // TOSIN
+const voice_id = 'LckP2Hd96Vzr02lAF5IN'; // BIDEN
+// const voice_id = 'iWvT3d6Mr8Zret8L4BO7' // TOSIN
 const voiceUrl = `https://api.elevenlabs.io/v1/text-to-speech/${voice_id}`;
 const apiKey = process.env.ELEVEN_API_KEY;
 
@@ -30,7 +30,7 @@ app.use(logger);
 app.use(cors());
 app.use(express.json());
 
-// SERVER ROUTES
+// ROUTES
 
 app.get('/', (req, res) => {
     res.status(200).send({ message: "Ask Biden!" });  
@@ -38,11 +38,11 @@ app.get('/', (req, res) => {
 
 app.post('/', async (req, res) => {    
     const prompt = req.body.prompt;
+    
     console.clear();
     console.log(prompt);
 
     // CALL OPENAI
-
     const gpt = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     temperature: 0.5,
@@ -55,7 +55,6 @@ app.post('/', async (req, res) => {
     console.log(gptContent);
 
     // CALL ELEVENLABS
-
     const response = await fetch(voiceUrl, 
     {
         method: 'POST',
@@ -76,7 +75,6 @@ app.post('/', async (req, res) => {
     });
 
     // BUFFER AUDIO AND SERVE CLIENT
-
     if (response.ok) {
         const blob = await response.blob();
         const buf = await blob.arrayBuffer();

@@ -73,7 +73,6 @@ const startListening = () => {
 const stopListening = () => {
     listening = false;
     stt.stop();
-    clearTimeout(listenTimer);
     listenTimer = null;
 
     // display
@@ -199,7 +198,8 @@ const handleVoice = () => {
             clearTimeout(listenTimer);
         })
 
-        stt.addEventListener('speechend', stt.stop);
+        stt.addEventListener('speechend', stopListening);
+
         stt.addEventListener('result', (e) => {
             let transcript = e.results[0][0].transcript;
             textArea.value = transcript;
@@ -315,56 +315,15 @@ const init = () => {
 
 init();
 
-/* DEV:
+// KEEP CHAT STATE AND SEND IN REQUEST TO BACKEND
+// CLEAR CHAT STATE ON RELOAD
 
-// TIMEOUT ONLY IF NO SPEECH FOR 3 SEC PAST 'START'. KEEP LISTENING UNTIL 'SPEECHEND' OTHERWISE. EVENT LISTENER WITH SET INTERVAL? (IN GENERAL, MAKE WEB SPEECH MORE PATIENT)
-
-// KEEP FIRST LISTENING UNTIL USER EXITS MIC PROMPT
-
-// SEND FULL CONVO STATE IN OPENAI CALL
-
-*/
-
-/* PROD:
-
-// REMOVE FUNNY BUSINESS (HAVE A PERSONAL FORK)
+// REMOVE FUNNY BUSINESS (PERSONAL BRANCH)
+// JOELAUL DONATION LINKTREE / DONATE SUGGESTION AFTER X PROMPTS
 // LINT, TEST, ERROR HANDLING
-// WHY DOES NOTHING EVER DEPLOY PROPERLY
-// README: DEPLOYMENT GUIDE, DIAGRAM
-// VIDEO, BLOG
+
+// README: DEPLOY GUIDE, DIAGRAM
+// HOW TO DEPLOY???
+
 // LINKEDIN / REDDIT / HACKERNEWS / TWITTER
-
-*/
-
-/* TECH:
-
-// WEB SPEECH
-// WEB AUDIO
-// CANVAS
-// OPENAI
-// ELEVENLABS
-// EXPRESS, DOTENV
-// SASS
-// PARCEL
-// TERMINAL
-// GIT
-
-*/
-
-/* LESSONS LEARNED:
-
-// FORMS (BUTTONS FIRE SUBMIT EVENT BY DEFAULT)
-// IIFES HAVE FUNCTION SCOPE, NOT GLOBAL
-// CLEARTIMEOUT =/= NULLING A TIMER
-// RESOURCE CONTROL: THROTTLING, CACHING, TOKEN LIMIT
-// LOGGING, MIDDLEWARE, MODULES
-// ENVIRONMENT VARIABLES, DIRECTORY STRUCTURE
-// BLOBS, OBJECT URLS, BUFFERS (BINARY)
-*/
-
-/* DOWN THE ROAD:
-
-// LESS HAPHAZARD ELEMENT POSITIONING?
-// LESS REDUNDANT ALGORITHMS
-// DYNAMICALLY RENDERING ELEMENTS.. VANILLA PAIN POINT?
-*/
+// VIDEO, BLOG
