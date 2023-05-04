@@ -1,0 +1,323 @@
+@import "https://fonts.googleapis.com/css?family=Muli&display=swap";
+* {
+  box-sizing: border-box;
+  font-family: Muli;
+}
+
+body {
+  min-height: 100vh;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  opacity: 1;
+  background: linear-gradient(#b22222, #fff, #87a7eb);
+  transition: opacity .5s linear;
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+body a {
+  text-decoration: none;
+}
+
+body a:hover {
+  color: #fff;
+}
+
+body button {
+  word-wrap: break-word;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.dim-overlay {
+  height: 100vh;
+  opacity: .2;
+  background: #000;
+  transition: opacity .2s linear;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.fork-me {
+  z-index: 2;
+  position: fixed;
+  top: 0;
+  right: 0;
+}
+
+.header {
+  z-index: 1;
+  flex-direction: column;
+  align-items: center;
+  margin: 15px;
+  display: flex;
+  position: relative;
+  left: 6px;
+}
+
+.header h1 {
+  color: #000;
+  margin: 0;
+  font-size: 55px;
+}
+
+.header p {
+  margin: 5px;
+  font-weight: 900;
+}
+
+.content-wrapper {
+  z-index: 3;
+  max-width: 640px;
+  justify-content: center;
+  margin: 0 auto;
+  display: flex;
+  position: relative;
+  left: 5px;
+}
+
+.content-wrapper .middle-container {
+  max-width: 300px;
+  margin: 0 auto;
+  transition: transform .2s ease-in-out;
+  position: relative;
+  right: 0;
+}
+
+.content-wrapper .middle-container .middle-top {
+  z-index: 0;
+  position: relative;
+}
+
+.content-wrapper .middle-container .middle-top img {
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+  border-radius: 6px;
+}
+
+.content-wrapper .middle-container .middle-top img:active {
+  transform: scale(.95);
+}
+
+.content-wrapper .middle-container .middle-top .peekaboo {
+  z-index: -10;
+}
+
+.content-wrapper .middle-container .middle-top .peekaboo canvas {
+  pointer-events: none;
+  padding-left: 3px;
+  position: absolute;
+  top: 163px;
+  left: 0;
+}
+
+.content-wrapper .middle-container .middle-top .peekaboo .listen-message {
+  font-weight: 900;
+  transition: opacity .175s linear;
+  position: absolute;
+  left: 10px;
+}
+
+.content-wrapper .middle-container .middle-top .peekaboo .loader {
+  text-align: center;
+  width: 300px;
+  height: 300px;
+  flex-direction: column;
+  transition: opacity linear;
+  display: flex;
+  position: absolute;
+  top: 166px;
+}
+
+.content-wrapper .middle-container .middle-top .peekaboo .loader .loader-message {
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.content-wrapper .middle-container .middle-top .peekaboo .loader .loader-wheel {
+  width: 20px;
+  height: 20px;
+  border: 6px solid #3498db;
+  border-color: #3498db #b22222 #f3f3f3 #fff;
+  border-radius: 50%;
+  animation: 2s linear infinite spin;
+  position: relative;
+  top: -5px;
+  left: 136px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.content-wrapper .middle-container .middle-slide {
+  z-index: 1;
+  margin: 10px;
+  transition: transform .2s ease-in;
+  position: relative;
+  top: -10px;
+}
+
+.content-wrapper .middle-container .middle-slide form {
+  width: 330px;
+  height: 75px;
+  justify-content: center;
+  margin-top: 25px;
+  display: flex;
+  position: relative;
+  right: 5px;
+}
+
+.content-wrapper .middle-container .middle-slide form button {
+  cursor: pointer;
+  background: none;
+  border: 0;
+  position: relative;
+  top: 3px;
+  right: 35px;
+}
+
+.content-wrapper .middle-container .middle-slide form button:hover {
+  transform: scale(1.2);
+}
+
+.content-wrapper .middle-container .middle-slide form button:active {
+  transform: scale(.9);
+}
+
+.content-wrapper .middle-container .middle-slide form button:focus {
+  outline: none;
+}
+
+.content-wrapper .middle-container .middle-slide form .form-buttons {
+  opacity: .8;
+  height: 69px;
+  flex-direction: column;
+  justify-content: space-between;
+  display: flex;
+}
+
+.content-wrapper .middle-container .middle-slide form textarea {
+  width: 300px;
+  resize: none;
+  background: #fff6;
+  border-radius: 4px;
+  padding: 8px 24px 8px 8px;
+  font-size: 16px;
+}
+
+.content-wrapper .middle-container .middle-slide form textarea::-webkit-scrollbar {
+  display: none;
+}
+
+.content-wrapper .middle-container .middle-slide h2 {
+  text-align: center;
+}
+
+.content-wrapper .middle-container .middle-slide .suggestion-buttons {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  display: grid;
+  overflow-y: scroll;
+  -webkit-mask-image: linear-gradient(#000 95%, #0000 100%);
+  mask-image: linear-gradient(#000 95%, #0000 100%);
+}
+
+.content-wrapper .middle-container .middle-slide .suggestion-buttons::-webkit-scrollbar {
+  display: none;
+}
+
+.content-wrapper .middle-container .middle-slide .suggestion-buttons button {
+  color: #fff;
+  text-align: left;
+  background: #de7474;
+  border: #0000;
+  border-radius: 7px;
+  padding: 9px;
+}
+
+.content-wrapper .middle-container .middle-slide .suggestion-buttons button:hover {
+  transform: scale(1.03);
+}
+
+.content-wrapper .middle-container .middle-slide .suggestion-buttons button:active {
+  transform: scale(.97);
+}
+
+.content-wrapper .chat-container {
+  z-index: 5;
+  max-width: 300px;
+  width: 300px;
+  height: 582px;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  word-wrap: break-word;
+  border: 2px solid #0000;
+  border-radius: 5px;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 0 auto;
+  padding: 5px;
+  display: flex;
+  position: relative;
+  overflow-y: scroll;
+  -webkit-mask-image: linear-gradient(to top, #000 95%, #0000 100%);
+  mask-image: linear-gradient(to top, #000 95%, #0000 100%);
+}
+
+.content-wrapper .chat-container::-webkit-scrollbar {
+  display: none;
+}
+
+.content-wrapper .chat-container .chat-bubble {
+  width: 180px;
+  opacity: .9;
+  text-align: left;
+  border-radius: 15px;
+  margin: 5px;
+  padding: 10px;
+  font-size: 14px;
+}
+
+.hide {
+  opacity: 0;
+}
+
+.slide-out {
+  transform: translateY(40px);
+}
+
+.user {
+  color: #000;
+  background: #e8e8eb;
+  align-self: flex-end;
+}
+
+.joe {
+  color: #e7f8f8;
+  cursor: pointer;
+  background: #0878f8;
+  align-self: flex-start;
+}
+
+.joe:hover {
+  transform: scale(1.03);
+}
+
+.joe:active {
+  transform: scale(.97);
+}
+
+/*# sourceMappingURL=index.8353e49f.css.map */

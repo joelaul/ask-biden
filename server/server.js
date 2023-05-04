@@ -38,7 +38,7 @@ app.get('/', (req, res) => {
 
 app.post('/', async (req, res) => {    
     const prompt = req.body.prompt;
-    
+
     console.clear();
     console.log(prompt);
 
@@ -80,6 +80,7 @@ app.post('/', async (req, res) => {
         const buf = await blob.arrayBuffer();
         const audio = Buffer.from(buf);
         res.type('application/json');
+        
         res.status(200).send
         ({ 'audio': audio, 'text': gptContent });
     }
