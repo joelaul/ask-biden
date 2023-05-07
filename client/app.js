@@ -253,7 +253,7 @@ const handleAsk = async (prompt) => {
             }, 200);
             
             // get joe response
-            const response = await fetch('https://ask-biden-backend.onrender.com/', 
+            const response = await fetch('44.226.145.213', 
             {
                 method: 'POST',
                 headers: {
@@ -317,7 +317,6 @@ const init = () => {
 
 init();
 
-// JEST FOR VOID FUNCTIONS? NOT NECESSARY?
 // TYPEERROR WHEN CLICKING JOEBUBBLE FOR CODE PROMPT
 // KEEP CHAT STATE, SEND IN FETCH, CLEAR ON RELOAD
 // DONATE SUGGESTION AFTER X PROMPTS
