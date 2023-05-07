@@ -1,7 +1,7 @@
 // IMPORTS
 
 require('dotenv').config();
-const { logger } = require('./logger');
+// const { logger } = require('./logger');
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -26,7 +26,7 @@ const apiKey = process.env.ELEVEN_API_KEY;
 
 // MIDDLEWARE
 
-app.use(logger);
+// app.use(logger);
 app.use(cors());
 app.use(express.json());
 
@@ -89,6 +89,8 @@ app.post('/', async (req, res) => {
 // INIT
 
 app.listen(port, () => {
-    // console.clear();
+    console.clear();
     console.log(`Server running on port ${port}`);
 });
+
+// render deploy fail: http problem? logger?
