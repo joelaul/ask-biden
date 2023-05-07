@@ -20,7 +20,6 @@ const MAX_TOKENS = 50;
 // CREDS - ELEVENLABS
 
 const voice_id = 'LckP2Hd96Vzr02lAF5IN'; // BIDEN
-// const voice_id = 'iWvT3d6Mr8Zret8L4BO7' // TOSIN
 const voiceUrl = `https://api.elevenlabs.io/v1/text-to-speech/${voice_id}`;
 const apiKey = process.env.ELEVEN_API_KEY;
 
@@ -40,7 +39,7 @@ app.post('/', async (req, res) => {
     const prompt = req.body.prompt;
 
     // console.clear();
-    console.log(prompt);
+    // console.log(prompt);
 
     // CALL OPENAI
     const gpt = await openai.createChatCompletion({
@@ -52,7 +51,7 @@ app.post('/', async (req, res) => {
     ],
     });
     const gptContent = gpt.data.choices[0].message.content;
-    console.log(gptContent);
+    // console.log(gptContent);
 
     // CALL ELEVENLABS
     const response = await fetch(voiceUrl, 
