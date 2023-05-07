@@ -253,7 +253,7 @@ const handleAsk = async (prompt) => {
             }, 200);
             
             // get joe response
-            const response = await fetch('http://localhost:8000', 
+            const response = await fetch('https://ask-biden-backend.onrender.com/', 
             {
                 method: 'POST',
                 headers: {
@@ -322,6 +322,7 @@ init();
 // KEEP CHAT STATE, SEND IN FETCH, CLEAR ON RELOAD
 // DONATE SUGGESTION AFTER X PROMPTS
 // RESPONSIVE DESIGN
+
 // SNOWFLAKE-PROOFING - MAKE PERSONAL BRANCH (JARED TEXT)
 // README DEPLOY GUIDE, FLOWCHART
 // LINKEDIN / REDDIT / HN / TWITTER
