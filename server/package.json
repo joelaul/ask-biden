@@ -8,8 +8,7 @@
     "date-fns": "^2.29.3",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
-    "openai": "^3.2.1",
-    "jest": "^29.5.0"
+    "openai": "^3.2.1"
   },
   "devDependencies": {
     "eslint": "^8.40.0",
@@ -17,7 +16,6 @@
   },
   "scripts": {
     "dev": "nodemon server.js",
-    "build": "node server.js",
-    "test": "jest"
+    "build": "node server.js"
   }
 }

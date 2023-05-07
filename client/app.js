@@ -1,7 +1,10 @@
+/* eslint-disable no-undef */
+
 // IMPORTS
 
 const confetti = require('./node_modules/canvas-confetti/src/confetti');
 const sounds = require('./sounds');
+const stt = new webkitSpeechRecognition;
 
 // DOM
 
@@ -15,13 +18,8 @@ const suggestions = document.querySelectorAll('.suggestion-buttons button');
 const contentWrapper = document.querySelector('.content-wrapper');
 const middleSlide = document.querySelector('.middle-slide');
 const biden = document.querySelector('.middle-top img');
-let chatContainer;
 const dim = document.querySelector('.dim-overlay');
-
-// STATE
-
-const usedPrompts = {};
-const userBubbleIDs = [], joeBubbleDivs = [];
+let chatContainer;
 
 const canvas = document.querySelector(".waveform");
 const canvasCtx = canvas.getContext("2d");
@@ -30,7 +28,11 @@ canvas.width = WIDTH, canvas.height = HEIGHT;
 canvasCtx.fillStyle = "rgb(255, 255, 255)";
 canvasCtx.strokeStyle = "rgb(0, 0, 0)";
 canvasCtx.lineWidth = 2;
-const stt = new webkitSpeechRecognition;
+
+// STATE
+
+const usedPrompts = {};
+const userBubbleIDs = [], joeBubbleDivs = [];
 
 let formText, audio, analyser, dataArray;
 let throttleTimer, listenTimer;
@@ -315,16 +317,13 @@ const init = () => {
 
 init();
 
-// HOW TO DEPLOY BACKEND???
-// LESS EXPENSIVE REPOPULATE ALGORITHM?
+// JEST FOR VOID FUNCTIONS? NOT NECESSARY?
 // TYPEERROR WHEN CLICKING JOEBUBBLE FOR CODE PROMPT
-
-// KEEP CHAT STATE AND SEND IN REQUEST TO BACKEND
-// CLEAR CHAT STATE ON RELOAD
+// KEEP CHAT STATE, SEND IN FETCH, CLEAR ON RELOAD
 // DONATE SUGGESTION AFTER X PROMPTS
 // RESPONSIVE DESIGN
 
-// LINT, TEST, ERROR HANDLING
+// DEPLOY BACKEND
 // SNOWFLAKE-PROOFING - MAKE PERSONAL BRANCH (JARED TEXT)
-// README DEPLOY GUIDE, DIAGRAM
-// PROMOTE - LINKEDIN / REDDIT / HN / TWITTER / BLOG
+// README DEPLOY GUIDE, FLOWCHART
+// LINKEDIN / REDDIT / HN / TWITTER

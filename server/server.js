@@ -81,14 +81,14 @@ app.post('/', async (req, res) => {
         const audio = Buffer.from(buf);
         res.type('application/json');
         
-        res.status(200).send
-        ({ 'audio': audio, 'text': gptContent });
+        res.status(200).send(
+            { 'audio': audio, 'text': gptContent });
     }
 });
 
 // INIT
 
 app.listen(port, () => {
-    console.clear();
+    // console.clear();
     console.log(`Server running on port ${port}`);
 });
