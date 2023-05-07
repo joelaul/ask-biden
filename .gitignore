@@ -1,4 +1,4 @@
 .parcel-cache
 node_modules
 .env
-./server/logs
+server/logs/

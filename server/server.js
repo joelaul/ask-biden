@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
 app.post('/', async (req, res) => {    
     const prompt = req.body.prompt;
 
-    console.clear();
+    // console.clear();
     console.log(prompt);
 
     // CALL OPENAI
@@ -89,6 +89,6 @@ app.post('/', async (req, res) => {
 // INIT
 
 app.listen(port, () => {
-    console.clear();
+    // console.clear();
     console.log(`Server running on port ${port}`);
 });
