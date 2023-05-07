@@ -41,7 +41,7 @@ app.post('/', async (req, res) => {
     // console.clear();
     // console.log(prompt);
 
-    // CALL OPENAI
+    // call openai
     const gpt = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     temperature: 0.5,
@@ -53,7 +53,7 @@ app.post('/', async (req, res) => {
     const gptContent = gpt.data.choices[0].message.content;
     // console.log(gptContent);
 
-    // CALL ELEVENLABS
+    // call elevenlabs
     const response = await fetch(voiceUrl, 
     {
         method: 'POST',
@@ -73,7 +73,7 @@ app.post('/', async (req, res) => {
         })
     });
 
-    // BUFFER AUDIO AND SERVE CLIENT
+    // buffer audio and serve client
     if (response.ok) {
         const blob = await response.blob();
         const buf = await blob.arrayBuffer();
