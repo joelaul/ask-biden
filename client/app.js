@@ -253,7 +253,7 @@ const handleAsk = async (prompt) => {
             }, 200);
             
             // get joe response
-            const response = await fetch('44.226.145.213', 
+            const response = await fetch('https://ask-biden-backend.onrender.com/', 
             {
                 method: 'POST',
                 headers: {
