@@ -268,7 +268,7 @@ const handleAsk = async (prompt) => {
         repopulateJoeBubbles();
         sending = false;
 
-        console.log(usedPrompts);
+        // console.log(usedPrompts);
     }
 }
 
@@ -322,6 +322,8 @@ init();
 // DONATE SUGGESTION AFTER X PROMPTS
 // RESPONSIVE DESIGN
 
-// SNOWFLAKE-PROOFING - MAKE PERSONAL BRANCH (JARED TEXT)
+// SNOWFLAKE-PROOFING :( 
 // README DEPLOY GUIDE, FLOWCHART
 // LINKEDIN / REDDIT / HN / TWITTER
+
+// how to receive prod logs in the dev environment?

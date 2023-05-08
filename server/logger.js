@@ -1,9 +1,15 @@
+// IMPORTS
+
 const { format } = require('date-fns');
 const fsPromises = require('fs').promises;
 const path = require('path');
 
+// STATE
+
 const subUrl = 'https://api.elevenlabs.io/v1/user/subscription';
 const apiKey = process.env.ELEVEN_API_KEY
+
+// FUNCTIONS
 
 const logger = async (req, res, next) => {
     // gather request info (date, characters used)
@@ -30,5 +36,7 @@ const logger = async (req, res, next) => {
 
     next();
 }
+
+// EXPORT
 
 module.exports = { logger }

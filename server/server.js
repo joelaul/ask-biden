@@ -1,7 +1,8 @@
 // IMPORTS
 
-require('dotenv').config();
 const { logger } = require('./logger');
+
+require('dotenv').config();
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -9,17 +10,17 @@ const { Configuration, OpenAIApi } = require("openai");
 
 const port = 8000 || process.env.PORT;
 
-// CREDS - OPENAI
+// CREDS
 
+// OpenAI
 const configuration = new Configuration({
     apiKey: process.env.OPENAI_API_KEY
 });
 const openai = new OpenAIApi(configuration);
 const MAX_TOKENS = 50;
 
-// CREDS - ELEVENLABS
-
-const voice_id = 'LckP2Hd96Vzr02lAF5IN'; // BIDEN
+// ElevenLabs
+const voice_id = 'LckP2Hd96Vzr02lAF5IN';
 const voiceUrl = `https://api.elevenlabs.io/v1/text-to-speech/${voice_id}`;
 const apiKey = process.env.ELEVEN_API_KEY;
 
@@ -38,10 +39,10 @@ app.get('/', (req, res) => {
 app.post('/', async (req, res) => {    
     const prompt = req.body.prompt;
 
-    // console.clear();
-    // console.log(prompt);
+    console.clear();
+    console.log(prompt);
 
-    // call openai
+    // call OpenAI
     const gpt = await openai.createChatCompletion({
     model: "gpt-3.5-turbo",
     temperature: 0.5,
@@ -51,9 +52,9 @@ app.post('/', async (req, res) => {
     ],
     });
     const gptContent = gpt.data.choices[0].message.content;
-    // console.log(gptContent);
+    console.log(gptContent);
 
-    // call elevenlabs
+    // call ElevenLabs
     const response = await fetch(voiceUrl, 
     {
         method: 'POST',
@@ -88,6 +89,6 @@ app.post('/', async (req, res) => {
 // INIT
 
 app.listen(port, () => {
-    // console.clear();
+    console.clear();
     console.log(`Server running on port ${port}`);
 });
