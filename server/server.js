@@ -1,6 +1,6 @@
 // IMPORTS
 
-const { logger } = require('./logger');
+// const { logger } = require('./logger');
 
 require('dotenv').config();
 const express = require('express');
@@ -26,7 +26,7 @@ const apiKey = process.env.ELEVEN_API_KEY;
 
 // MIDDLEWARE
 
-app.use(logger);
+// app.use(logger);
 app.use(cors());
 app.use(express.json());
 
