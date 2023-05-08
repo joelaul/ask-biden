@@ -267,8 +267,6 @@ const handleAsk = async (prompt) => {
         playJoeResponse();
         repopulateJoeBubbles();
         sending = false;
-
-        // console.log(usedPrompts);
     }
 }
 
@@ -321,9 +319,6 @@ init();
 // KEEP CHAT STATE, SEND IN FETCH, CLEAR ON RELOAD
 // DONATE SUGGESTION AFTER X PROMPTS
 // RESPONSIVE DESIGN
-
 // SNOWFLAKE-PROOFING :( 
 // README DEPLOY GUIDE, FLOWCHART
 // LINKEDIN / REDDIT / HN / TWITTER
-
-// how to receive prod logs in the dev environment?
