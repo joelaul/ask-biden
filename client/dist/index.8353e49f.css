@@ -300,15 +300,15 @@ body button {
 }
 
 .user {
-  color: #000;
-  background: #e8e8eb;
+  color: #e7f8f8;
+  background: #0878f8;
   align-self: flex-end;
 }
 
 .joe {
-  color: #e7f8f8;
+  color: #000;
   cursor: pointer;
-  background: #0878f8;
+  background: #e8e8eb;
   align-self: flex-start;
 }
 

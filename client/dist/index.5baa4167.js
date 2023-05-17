@@ -770,7 +770,6 @@ const handleAsk = async (prompt)=>{
         playJoeResponse();
         repopulateJoeBubbles();
         sending = false;
-        console.log(usedPrompts);
     }
 };
 // INIT
@@ -806,13 +805,20 @@ const init = ()=>{
     });
     textArea.focus();
 };
-init(); // TYPEERROR WHEN CLICKING JOEBUBBLE FOR CODE PROMPT
- // KEEP CHAT STATE, SEND IN FETCH, CLEAR ON RELOAD
- // DONATE SUGGESTION AFTER X PROMPTS
+init(); // RUN HANDLEJOEBUBBLE ONLY IF !SENDING && !LISTENING
+ // PHANTOM CONSOLE.LOG()
+ // TYPEERROR WHEN CLICKING JOEBUBBLE FOR CODE PROMPT
+ // CHAT STATE, SEND IN FETCH, CLEAR ON RELOAD   
+ // PROMPT FOR MINIMAL "AS AN AI LANGUAGE MODEL", PRE-CACHE SUGGESTIONS?
  // RESPONSIVE DESIGN
- // SNOWFLAKE-PROOFING - MAKE PERSONAL BRANCH (JARED TEXT)
- // README DEPLOY GUIDE, FLOWCHART
- // LINKEDIN / REDDIT / HN / TWITTER
+ // DONATION LINK AFTER X PROMPTS
+ // README - DEPLOY GUIDE, FLOWCHART
+ // PROMOTE - LINKEDIN / REDDIT / TWITTER / BLOG
+ // COSTS:
+ // $57/yr domains, $29/mo cloud - try No Relic to save $7/mo
+ // LEGAL:
+ // REMOVE ANYTHING THAT COULD SUGGEST "MALICE" TOWARDS OUR PRESIDENT!
+ // (CAPTURE USER AUDIO TO CREATE MODEL; CAN THIS BE DONE THROUGH API?)
 
 },{"bb45a3d6abbb2e41":"ilgn9","f5458f465353a59f":"bN2xy"}],"ilgn9":[function(require,module,exports) {
 (function main(global, module1, isWorker, workerSize) {
@@ -1296,6 +1302,7 @@ init(); // TYPEERROR WHEN CLICKING JOEBUBBLE FOR CODE PROMPT
 }(), module, false);
 
 },{}],"bN2xy":[function(require,module,exports) {
+/* eslint-disable no-undef */ // STATE
 const sentSoundUrl = require("bd01df31efb72975");
 const sentSound = new Audio(sentSoundUrl);
 const suggestionSoundUrl = require("67c42ec3f674e953");
@@ -1310,6 +1317,7 @@ suggestionSound.volume = 0.4;
 listenStartSound.volume = 0.1;
 listenStopSound.volume = 0.1;
 confettiSound.volume = 0.2;
+// EXPORT
 module.exports = {
     sentSound,
     suggestionSound,

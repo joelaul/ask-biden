@@ -318,16 +318,15 @@ body {
 
 .user {
     align-self: flex-end;
-    background: #E8E8EB;
-    color: black;
+    background: #0878F8;
+    color: #E7F8F8;
 }
 
 .joe {
     align-self: flex-start;
-    background: #0878F8;
-    color: #E7F8F8;
+    color: black;
     cursor: pointer;
-
+    background: #E8E8EB;
     &:hover {
         transform: scale(103%);
     }
