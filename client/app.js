@@ -1,5 +1,33 @@
 /* eslint-disable no-undef */
 
+/*
+
+// README - DEPLOY GUIDE, ARCHITECTURE FLOWCHART
+// PROMOTE - LINKEDIN / REDDIT / TWITTER / BLOG
+
+// TYPEERROR WHEN CLICKING JOEBUBBLE FOR CODE PROMPT
+// EMPTY TEXT AREA ON VOICE SEND
+// CHAT STATE, SEND IN FETCH, CLEAR ON RELOAD   
+// PROMPT FOR MINIMAL "AS AN AI LANGUAGE MODEL", PRE-CACHE SUGGESTIONS?
+// DONATION LINK AFTER X PROMPTS
+// FOOTER WITH PERSONAL SITE LINK
+// RESPONSIVE DESIGN
+// MOVE RATE LIMITING TO BACKEND.. IS THERE A DIFFERENCE? WHY FULL STACK?
+// RE-ENABLE LOGGING FOR RENDER SHELL
+
+*/
+
+/*
+
+// COSTS:
+// $57/yr domains, $29/mo cloud - try No Relic to save $7/mo
+
+// LEGAL:
+// REMOVE ANYTHING THAT COULD SUGGEST "MALICE" TOWARDS OUR PRESIDENT!
+// (CAPTURE USER AUDIO TO CREATE MODEL; CAN THIS BE DONE THROUGH API?)
+
+*/
+
 // IMPORTS
 
 const confetti = require('./node_modules/canvas-confetti/src/confetti');
@@ -173,11 +201,13 @@ const repopulateJoeBubbles = () => {
 // HANDLERS
 
 const handleJoeBubble = (id) => {
-    const itsPrompt = document.getElementById(id).innerText;
-    const itsAudio = usedPrompts[itsPrompt][0];
-    audio.src = itsAudio;
-    middleSlide.classList.add('slide-out');
-    playJoeResponse();
+    if (!listening && !sending) {
+        const itsPrompt = document.getElementById(id).innerText;
+        const itsAudio = usedPrompts[itsPrompt][0];
+        audio.src = itsAudio;
+        middleSlide.classList.add('slide-out');
+        playJoeResponse();
+    }
 }
 
 const handleVoice = () => {
@@ -314,20 +344,3 @@ const init = () => {
 }
 
 init();
-
-// RUN HANDLEJOEBUBBLE ONLY IF !SENDING && !LISTENING
-// PHANTOM CONSOLE.LOG()
-// TYPEERROR WHEN CLICKING JOEBUBBLE FOR CODE PROMPT
-// CHAT STATE, SEND IN FETCH, CLEAR ON RELOAD   
-// PROMPT FOR MINIMAL "AS AN AI LANGUAGE MODEL", PRE-CACHE SUGGESTIONS?
-// RESPONSIVE DESIGN
-// DONATION LINK AFTER X PROMPTS
-// README - DEPLOY GUIDE, FLOWCHART
-// PROMOTE - LINKEDIN / REDDIT / TWITTER / BLOG
-
-// COSTS:
-// $57/yr domains, $29/mo cloud - try No Relic to save $7/mo
-
-// LEGAL:
-// REMOVE ANYTHING THAT COULD SUGGEST "MALICE" TOWARDS OUR PRESIDENT!
-// (CAPTURE USER AUDIO TO CREATE MODEL; CAN THIS BE DONE THROUGH API?)

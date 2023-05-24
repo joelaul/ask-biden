@@ -1,7 +1,6 @@
 // IMPORTS
 
 // const { logger } = require('./logger');
-
 require('dotenv').config();
 const express = require('express');
 const app = express();
@@ -10,7 +9,7 @@ const { Configuration, OpenAIApi } = require("openai");
 
 const port = 8000 || process.env.PORT;
 
-// CREDS
+// API CREDS
 
 // OpenAI
 const configuration = new Configuration({
@@ -35,6 +34,10 @@ app.use(express.json());
 app.get('/', (req, res) => {
     res.status(200).send({ message: "Ask Biden!" });  
 }); 
+
+app.get('/vibecheck', (req, res) => {
+    res.status(200).send({ message: "Vibe checked!"});
+})
 
 app.post('/', async (req, res) => {    
     const prompt = req.body.prompt;
