@@ -559,9 +559,7 @@ function hmrAccept(bundle, id) {
 },{}],"igcvL":[function(require,module,exports) {
 /* eslint-disable no-undef */ /*
 
-// README - DEPLOY GUIDE, ARCHITECTURE FLOWCHART
-// PROMOTE - LINKEDIN / REDDIT / TWITTER / BLOG
-
+// RE-ENABLE LOGGING FOR RENDER SHELL
 // TYPEERROR WHEN CLICKING JOEBUBBLE FOR CODE PROMPT
 // EMPTY TEXT AREA ON VOICE SEND
 // CHAT STATE, SEND IN FETCH, CLEAR ON RELOAD   
@@ -570,12 +568,11 @@ function hmrAccept(bundle, id) {
 // FOOTER WITH PERSONAL SITE LINK
 // RESPONSIVE DESIGN
 // MOVE RATE LIMITING TO BACKEND.. IS THERE A DIFFERENCE? WHY FULL STACK?
-// RE-ENABLE LOGGING FOR RENDER SHELL
 
 */ /*
 
-// COSTS:
-// $57/yr domains, $29/mo cloud - try No Relic to save $7/mo
+// COST:
+// $45/yr domains, $22/mo cloud
 
 // LEGAL:
 // REMOVE ANYTHING THAT COULD SUGGEST "MALICE" TOWARDS OUR PRESIDENT!
