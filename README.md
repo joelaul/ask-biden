@@ -20,7 +20,7 @@
 
 ## 🏗️ Project Architecture
 
-![Flowchart goes here]()
+![Project Architecture](https://upcdn.io/W142hJk/raw/demo/4mRKjTpj5a.png)
 
 ## ‍💻 Deployment Guide
 

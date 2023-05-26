@@ -557,28 +557,7 @@ function hmrAccept(bundle, id) {
 }
 
 },{}],"igcvL":[function(require,module,exports) {
-/* eslint-disable no-undef */ /*
-
-// RE-ENABLE LOGGING FOR RENDER SHELL
-// TYPEERROR WHEN CLICKING JOEBUBBLE FOR CODE PROMPT
-// EMPTY TEXT AREA ON VOICE SEND
-// CHAT STATE, SEND IN FETCH, CLEAR ON RELOAD   
-// PROMPT FOR MINIMAL "AS AN AI LANGUAGE MODEL", PRE-CACHE SUGGESTIONS?
-// DONATION LINK AFTER X PROMPTS
-// FOOTER WITH PERSONAL SITE LINK
-// RESPONSIVE DESIGN
-// MOVE RATE LIMITING TO BACKEND.. IS THERE A DIFFERENCE? WHY FULL STACK?
-
-*/ /*
-
-// COST:
-// $45/yr domains, $22/mo cloud
-
-// LEGAL:
-// REMOVE ANYTHING THAT COULD SUGGEST "MALICE" TOWARDS OUR PRESIDENT!
-// (CAPTURE USER AUDIO TO CREATE MODEL; CAN THIS BE DONE THROUGH API?)
-
-*/ // IMPORTS
+/* eslint-disable no-undef */ // IMPORTS
 const confetti = require("bb45a3d6abbb2e41");
 const sounds = require("f5458f465353a59f");
 const stt = new webkitSpeechRecognition;
