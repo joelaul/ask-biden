@@ -20,27 +20,30 @@
 
 ## 🏗 How It Works
 
-![Project Architecture](https://upcdn.io/W142hJk/raw/demo/4mRKjTpj5a.png)
+![How It Works](https://upcdn.io/W142hJk/raw/demo/4mRKjTpj5a.png)
 
-## 💻 How To Run
+## 💻 How To Run Locally
 
-### Clone the repository
+### 🗝 Get API keys.
+
+- [OpenAI](https://openai.com/): Create an account and sign in. On the top right, click your name, then click "View API Keys".
+- [ElevenLabs](https://beta.elevenlabs.io/): Create an account and sign in. On the top right, click your name, then click "Profile".
+
+### Clone the repository to your machine.
 ```
 git clone https://github.com/joelaul/ask-biden
 ```
 
-### Install the dependencies
+### Install dependencies for client path and run.
 ```
-cd ask-biden
+cd ask-biden/client
 yarn install
+yarn dev
 ```
 
-### 🗝 Store API keys in .env file
+### For server path, store API keys in a .env file, and repeat.
 
-- OpenAI: Create an account and sign in. On the top right, click your name, then click "View API Keys".
-- ElevenLabs: Create an account and sign in. On the top right, click your name, then click "Profile".
-
-### Deploy with [Render](https://render.com/)
+## 🌎 How To Deploy With [Render](https://render.com/)
 
 1. Client: configure a [Static Site](https://render.com/docs/static-sites) with ./client as root directory.
 
