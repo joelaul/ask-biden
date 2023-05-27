@@ -22,26 +22,35 @@
 
 ![How It Works](https://upcdn.io/W142hJk/raw/demo/4mRKjTpj5a.png)
 
+---
+
 ## 💻 How To Run Locally
 
-### 🗝 Get API keys.
+### 🗝 Get API keys
 
 - [OpenAI](https://openai.com/): Create an account and sign in. On the top right, click your name, then click "View API Keys".
 - [ElevenLabs](https://beta.elevenlabs.io/): Create an account and sign in. On the top right, click your name, then click "Profile".
 
-### Clone the repository to your machine.
+### Clone the repository to your machine
 ```
 git clone https://github.com/joelaul/ask-biden
 ```
 
-### Install dependencies for frontend and run.
+### Setup
+
+- In [app.js](https://github.com/joelaul/ask-biden/blob/main/client/app.js), set handleAsk function's fetch URL to http://localhost:8000/.
+- Add an .env file containing your API keys to ./server ([like this](https://github.com/joelaul/ask-biden/blob/main/server/.example.env)).
+
+
+### Frontend
+
 ```
 cd ask-biden/client
 yarn install
 yarn dev
 ```
 
-### For backend, store API keys in a .env file ([like this](https://github.com/joelaul/ask-biden/blob/main/server/.example.env)), then repeat.
+### Backend 
 
 ```
 cd ask-biden/server
@@ -49,21 +58,7 @@ yarn install
 yarn dev
 ```
 
-### Set frontend fetch URL to http://localhost:8000/.
-
-## 🌎 How To Deploy With [Render](https://render.com/)
-
-1. **Frontend**: configure a [Static Site](https://render.com/docs/static-sites) with ./client as root directory.
-
-1. **Backend**: configure a [Web Service](https://render.com/docs/web-services) with ./server as root directory, Node as runtime, and the following environment variables:
-
-    - OPENAI_API_KEY - your OpenAI API key.
-
-    - ELEVEN_API_KEY - your ElevenLabs API key.
-
-    - NODE_VERSION (xx.x.x) - any version of Node supporting [fetch](https://nodejs.org/dist/latest-v18.x/docs/api/all.html#all_globals_fetch).
-    
-1. Set frontend fetch URL to your Web Service's domain.
+---
 
 ## ‍☕ Donate
 
