@@ -41,13 +41,21 @@ yarn install
 yarn dev
 ```
 
-### For backend, store API keys in a .env file, and repeat.
+### For backend, store API keys in a .env file ([like this](https://github.com/joelaul/ask-biden/blob/main/server/.example.env)), then repeat.
+
+```
+cd ask-biden/server
+yarn install
+yarn dev
+```
+
+### Set frontend fetch URL to http://localhost:8000/.
 
 ## 🌎 How To Deploy With [Render](https://render.com/)
 
-1. Frontend: configure a [Static Site](https://render.com/docs/static-sites) with ./client as root directory.
+1. **Frontend**: configure a [Static Site](https://render.com/docs/static-sites) with ./client as root directory.
 
-1. Backend: configure a [Web Service](https://render.com/docs/web-services) with ./server as root directory, Node as runtime, and the following environment variables:
+1. **Backend**: configure a [Web Service](https://render.com/docs/web-services) with ./server as root directory, Node as runtime, and the following environment variables:
 
     - OPENAI_API_KEY - your OpenAI API key.
 
