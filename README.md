@@ -38,7 +38,7 @@ git clone https://github.com/joelaul/ask-biden
 
 ### Setup
 
-- In [app.js](https://github.com/joelaul/ask-biden/blob/main/client/app.js), set handleAsk function's fetch URL to http://localhost:8000/.
+- Set handleAsk function's fetch URL to http://localhost:8000/.
 - Add an .env file containing your API keys to ./server ([like this](https://github.com/joelaul/ask-biden/blob/main/server/.example.env)).
 
 
@@ -57,6 +57,26 @@ cd ask-biden/server
 yarn install
 yarn dev
 ```
+
+---
+
+## 🌎 How To Deploy With [Render](https://render.com/)
+
+### Backend
+
+- Configure a [Web Service](https://render.com/docs/web-services) with ./server as root directory, Node as runtime, and the following environment variables:
+
+| Name | Value |
+|--------|-------------------|
+| OPENAI_API_KEY | Your OpenAI API key. |
+| ELEVEN_API_KEY | Your ElevenLabs API key. |
+| NODE_VERSION | any version of Node supporting [fetch](https://nodejs.org/dist/latest-v18.x/docs/api/all.html#all_globals_fetch) (v18.0 and up).  |
+
+### **Frontend** 
+
+Configure a [Static Site](https://render.com/docs/static-sites) with ./client as root directory.
+
+> Note: you must set the handleAsk function's fetch URL to your backend domain.
 
 ---
 

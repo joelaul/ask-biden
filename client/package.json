@@ -11,6 +11,7 @@
     "eslint": "^8.40.0"
   },
   "scripts": {
-    "dev": "yarn parcel index.html"
+    "dev": "yarn parcel index.html",
+    "prod": "yarn parcel build index.html"
   }
 }
