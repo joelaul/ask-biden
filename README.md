@@ -20,7 +20,8 @@
 
 ## 🏗 How It Works
 
-![How It Works](https://upcdn.io/W142hJk/raw/demo/4mRKjTpj5a.png)
+![How It Works](https://github.com/joelaul/ask-biden/assets/118637778/1de6c2db-9238-405f-9b13-4ab7bee4bc82)
+
 
 ---
 
