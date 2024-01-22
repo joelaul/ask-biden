@@ -39,22 +39,20 @@ git clone https://github.com/joelaul/ask-biden
 
 ### Configuration
 
-- Add an .env file containing your API keys to ./server ([like this](https://github.com/joelaul/ask-biden/blob/main/server/.example.env)).
+- Add an .env file containing your API keys to `./server` ([like this](https://github.com/joelaul/ask-biden/blob/main/server/.example.env)).
 
 ### Frontend
 
 ```
 cd ask-biden/client
-yarn install
-yarn dev
+yarn; yarn dev
 ```
 
 ### Backend
 
 ```
 cd ask-biden/server
-yarn install
-yarn dev
+yarn; yarn dev
 ```
 
 ---
@@ -63,7 +61,7 @@ yarn dev
 
 ### Backend
 
-- Configure a [Web Service](https://render.com/docs/web-services) with ./server as root directory, Node as runtime, and the following environment variables:
+- Configure a [Web Service](https://render.com/docs/web-services) with `./server` as root directory, Node as runtime, and the following environment variables:
 
 | Name           | Value                                                                                                                            |
 | -------------- | -------------------------------------------------------------------------------------------------------------------------------- |
@@ -73,10 +71,10 @@ yarn dev
 
 ### **Frontend**
 
-Configure a [Static Site](https://render.com/docs/static-sites) with ./client as root directory.
+Configure a [Static Site](https://render.com/docs/static-sites) with `./client` as root directory, `yarn; yarn prod` as build command, and `dist` as publish directory.
 
 ---
 
 ## ‍☕ Donate
 
-I’m not a full-time goth e-girl yet, but [your support](https://paypal.me/joelaul) can get me there faster.
+I’m not a full-time goth e-girl yet, but [your support](https://paypal.me/tipjoelaul) can get me there faster.
