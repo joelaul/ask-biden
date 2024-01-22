@@ -1,0 +1,17 @@
+{
+  "name": "client",
+  "version": "1.0.0",
+  "license": "MIT",
+  "dependencies": {
+    "canvas-confetti": "^1.6.0",
+    "parcel": "^2.8.3",
+    "@parcel/transformer-sass": "2.8.3"
+  },
+  "devDependencies": {
+    "eslint": "^8.40.0"
+  },
+  "scripts": {
+    "dev": "yarn parcel index.html",
+    "prod": "yarn parcel build index.html"
+  }
+}
